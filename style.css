@@ -8,11 +8,15 @@ body {
     object-fit: cover;
     display: block
 }
-#main {
+#content {
     height: 100vh;
     width: 100%;
     background: #fafafa;
     background: linear-gradient(180deg, #fbfbfb 0%, #f9f9f9 50%);
+}
+*:focus {
+    outline: 0;
+    outline: none;
 }
 #social_icons {
     width: 75vw;
