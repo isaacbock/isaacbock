@@ -14,6 +14,7 @@
     <!-- Styling -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700|Montserrat:300" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>Isaac Bock</title>
 </head>
@@ -23,18 +24,81 @@
         <source src="assets/LetteredIntro.mp4" type="video/mp4">
         Your browser does not support videos.
     </video>
-    <div id="content">
-        <!-- Social Icons -->
-        <div id="social_icons">
+    <div id="bio">
+         <!-- Social Icons -->
+         <!-- <img src="assets/IsaacBock.JPG" alt="Isaac Bock" width="250" height="250" id="headshot"> -->
+         <h1>Isaac Bock</h1>
+         <h3>Computer Science | Cognitive Neuroscience</h3>
+         <h4><em>Washington University in St. Louis, 2022</em></h4>
+         <div id="social_icons">
             <a href="#mailgo" data-address="isaactbock" data-domain="wustl.edu" class="fa fa-envelope"></a>
             <a href="https://www.instagram.com/isaactbock/" class="fa fa-instagram"></a>
             <a href="https://www.linkedin.com/in/isaactbock/" class="fa fa-linkedin"></a>
             <a href="https://github.com/isaactbock" class="fa fa-github fa-5x"></a>
         </div>
     </div>
+    <div class="three-dimensional">
+        <div class="trigger"></div>
+        <div class="section">
+            <h1>Computer Science</h1>
+            <h2>to design & create</h2>
+            <p>Java</p>
+            <p>Kotlin</p>
+            <p>HTML/CSS/JavaScript</p>
+            <p>PHP</p>
+            <p>SQL</p>
+            <p>C++</p>
+        </div>
+        <div class="blueprint">
+            <div class="section right">
+                <h1>Cognitive Neuroscience</h1>
+                <h2>to do it effectively</h2>
+                <p>A/B Testing</p>
+                <p>Data Analysis</p>
+                <p>User Feedback</p>
+                <p>Analytics</p>
+            </div>
+        </div>
+        <div class="section" id="phone_container">
+            
+            <div id="phone">
+                <img src="assets/Phone.png" alt="Phone Screen" id="phone_screen">
+                <img src="assets/Phone_Bubble1.png" alt="Phone Bubble 1" id="phone_bubble_1">
+                <img src="assets/Phone_Bubble2.png" alt="Phone Bubble 2" id="phone_bubble_2">
+                <img src="assets/Phone_Bubble3.png" alt="Phone Bubble 3" id="phone_bubble_3">
+                <img src="assets/Phone_Brain.png" alt="Phone Brain" id="phone_brain">
+            </div>
+            <div id="companies">
+                <h3>created for</h2>
+                <div id="created_for">
+                    <img src="assets/Invisibly.jpeg" alt="Invisibly">
+                    <img src="assets/BLB.png" alt="Body Language Blueprints">
+                    <img src="assets/ChromeWebStore.png" alt="Chrome Web Store">
+                </div>
+                <h3>presented to</h2>
+                <div id="presented_to">
+                    <img src="assets/Disney.png" alt="Disney">
+                    <img src="assets/WarnerBros.png" alt="Warner Bros.">
+                    <img src="assets/Lionsgate.png" alt="Lionsgate">
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div id="portfolio">
+        <div class="portfolio_item">
+            <div class="hover_overlay">
+              
+            </div>
+        </div>
+    </div>
+    
     <!-- GSAP / ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/ScrollTrigger.js"></script>
+    <!-- 3D Objects -->
+    <script src="https://unpkg.com/three@0.117.1/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.117.1/examples/js/loaders/OBJLoader.js"></script>
     <!-- Mailgo Email Linking -->
     <script src="https://cdn.jsdelivr.net/npm/mailgo@0.9.7/dist/mailgo.min.js"></script>
     <script src="app.js"></script>

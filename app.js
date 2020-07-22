@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
     // autoscroll down after intro video completion   
     let introVideo = document.getElementById("intro_video");
-    let content = document.getElementById("content");
+    let bio = document.getElementById("bio");
     introVideo.onended = function() {
-        setTimeout(function(){ scrollIntoViewCustom(content); }, 250);
+        setTimeout(function(){ scrollIntoViewCustom(bio); }, 250);
     };
 });
+
 
 // mobile-accessible smooth scroll via Ricardo Rocha (https://stackoverflow.com/a/57676300)
 function scrollIntoViewCustom(element) {
@@ -34,7 +35,6 @@ function scrollIntoViewCustom(element) {
       // if target > 0 (not back to top), the positon is current pos + (target pos * percentage of duration)
       pos = target === 0 ? firstPos - firstPos * easeInPercentage : firstPos + target * easeInPercentage;
       window.scrollTo(0, pos);
-      console.log(pos, target, firstPos, progress);
       if (target !== 0 && pos >= firstPos + target || target === 0 && pos <= 0) {
         cancelAnimationFrame(start);
         if (element) {
@@ -48,3 +48,252 @@ function scrollIntoViewCustom(element) {
     }
     window.requestAnimationFrame(showAnimation);
 }
+
+
+// there are 3 parts to this
+//
+// Scene:           Setups and manages threejs rendering
+// loadModel:       Loads the 3d obj file
+// setupAnimation:  Creates all the GSAP 
+//                  animtions and scroll triggers 
+//
+// first we call loadModel, once complete we call
+// setupAnimation which creates a new Scene
+
+class Scene
+{
+	constructor(model)
+	{
+		this.views = [
+			{ bottom: 0, height: 1 },
+			{ bottom: 0, height: 0 }
+		];
+		
+		this.renderer = new THREE.WebGLRenderer({
+			antialias: true,
+			alpha: true
+		});
+		
+		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		this.renderer.shadowMap.enabled = true;
+		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		this.renderer.setPixelRatio(window.devicePixelRatio);
+
+		document.body.appendChild( this.renderer.domElement );
+		
+		// scene
+
+		this.scene = new THREE.Scene();
+		
+		for ( var ii = 0; ii < this.views.length; ++ ii ) {
+
+			var view = this.views[ ii ];
+			var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+			camera.position.fromArray([0, 0, 180] );
+			camera.layers.disableAll();
+			camera.layers.enable( ii );
+			view.camera = camera;
+			camera.lookAt(new THREE.Vector3(0, 5, 0));
+		}
+		
+		//light
+
+		this.light = new THREE.PointLight( 0xffffff, 0.7 );
+		this.light.position.z = 150;
+		this.light.position.x = 300;
+		this.light.position.y = 200;
+		this.scene.add( this.light );
+
+		this.softLight = new THREE.AmbientLight( 0xffffff, 1.5 );
+		this.scene.add(this.softLight)
+
+		// group
+
+		this.onResize();
+		window.addEventListener( 'resize', this.onResize, false );
+		
+        var edges = new THREE.EdgesGeometry( model.children[ 0 ].geometry );
+        
+        var material = new THREE.LineBasicMaterial({
+            color: 0x02a9f7
+        });
+        
+
+		let line = new THREE.LineSegments( edges, material );
+		line.material.depthTest = false;
+		line.material.opacity = 1;
+		line.material.transparent = true;
+		line.position.x = 0.5;
+		line.position.z = -1;
+        line.position.y = 0.2;
+		
+		this.modelGroup = new THREE.Group();
+		
+		model.layers.set( 0 );
+		line.layers.set( 1 );
+			
+		this.modelGroup.add(model);
+		this.modelGroup.add(line);
+		this.scene.add(this.modelGroup);
+	}
+	
+	render = () =>
+	{
+		for ( var ii = 0; ii < this.views.length; ++ ii ) {
+
+			var view = this.views[ ii ];
+			var camera = view.camera;
+
+			var bottom = Math.floor( this.h * view.bottom );
+			var height = Math.floor( this.h * view.height );
+
+			this.renderer.setViewport( 0, 0, this.w, this.h );
+			this.renderer.setScissor( 0, bottom, this.w, height );
+			this.renderer.setScissorTest( true );
+
+			camera.aspect = this.w / this.h;
+			this.renderer.render( this.scene, camera );
+		}
+	}
+	
+	onResize = () => 
+	{
+		this.w = window.innerWidth;
+		this.h = window.innerHeight;
+		
+		for ( var ii = 0; ii < this.views.length; ++ ii ) {
+			var view = this.views[ ii ];
+			var camera = view.camera;
+			camera.aspect = this.w / this.h;
+			let camZ = (screen.width - (this.w * 1)) / 3;
+			camera.position.z = camZ < 180 ? 180 : camZ;
+			camera.updateProjectionMatrix();
+		}
+
+		this.renderer.setSize( this.w, this.h );		
+		this.render();
+	}
+}
+
+function loadModel() 
+{
+	gsap.registerPlugin(ScrollTrigger);
+	
+	var object;
+
+	function onModelLoaded() {
+		object.traverse( function ( child ) {
+			let mat = new THREE.MeshPhongMaterial( { color: 0x6e3545 , shininess: 25, flatShading: true } );
+			child.material = mat;
+		});
+
+		setupAnimation(object);
+	}
+
+	var manager = new THREE.LoadingManager( onModelLoaded );
+	manager.onProgress = ( item, loaded, total ) => console.log( item, loaded, total );
+
+	var loader = new THREE.OBJLoader( manager );
+    loader.load( '/assets/Brain.obj', function ( obj ) { object = obj; });
+}
+
+function setupAnimation(model)
+{
+	let scene = new Scene(model);
+    let brain = scene.modelGroup;
+	
+	let tau = Math.PI * 2;
+
+    gsap.set(brain.rotation, {x: 0, y: tau/4, z: 0});
+    gsap.set(brain.scale, {x: .3, y: .3, z: .3});
+    gsap.set(brain.position, {x: 30, y: -50, z: 140});
+	
+	scene.render();
+	
+    var sectionDuration = 1;
+
+    
+    // wireframe to solid
+	gsap.fromTo(scene.views[1], 
+		{ 	height: 1, bottom: 0 }, 
+		{
+			height: 0, bottom: 1,
+			ease: 'none',
+			scrollTrigger: {
+			  trigger: ".blueprint",
+              scrub: true,
+			  start: "top 300",
+			  end: "top -200"
+			}
+        });
+
+	
+	let tl = new gsap.timeline(
+	{
+		onUpdate: scene.render,
+		scrollTrigger: {
+		  trigger: ".three-dimensional",
+		  scrub: true,
+		  start: "top bottom",
+		  end: "bottom bottom"
+		},
+		defaults: {duration: sectionDuration, ease: 'power2.inOut'}
+	});
+	
+	let delay = 0;
+
+    tl.to('canvas',  {duration: 1, x: "0", autoAlpha: 1}, delay);
+    tl.to(brain.position, {duration: 1, x: 15, z: 140, ease: 'none'}, delay);
+    
+    
+    delay += sectionDuration;
+	
+    tl.to(brain.position, {x: 0, y: -20, z: -60, ease: 'power1.inOut'}, delay)
+    tl.to(brain.rotation, {x: tau*.25, y: tau*-.25, z: 0, ease: 'power1.inOut'}, delay)
+   
+	
+    delay += sectionDuration;
+
+    tl.to(brain.position, {duration: 0.5*sectionDuration, x: 0, y: 00, z: -200, ease: 'power1.in'}, delay)
+    tl.to(brain.rotation, {x: 0, y: 0, z: 0, ease: 'power1.inOut'}, delay)
+
+    tl.to('canvas',  {duration: 1, x: "0", autoAlpha: 0}, delay);
+
+
+    
+
+    gsap.from("#phone_brain", {
+        y:-100, scale: 0.9, opacity:0, duration:.5,
+        scrollTrigger: {
+            trigger:"#phone_container",
+            start:"top 25%",
+            end:"top 10%",
+            toggleActions:"restart none none reverse"
+        }
+    });
+
+    gsap.timeline({scrollTrigger:{
+        trigger:"#phone_container",
+        start:"top 25%",
+        end:"top top",
+        toggleActions:"restart none none reverse"
+    }})
+    .from("#phone_bubble_1", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5")
+    .from("#phone_bubble_2", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5")
+    .from("#phone_bubble_3", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5");
+
+    gsap.timeline({scrollTrigger:{
+        trigger:"#phone_container",
+        start:"bottom bottom",
+        end:"bottom 80%",
+        pin: true,
+        scrub: true,
+        toggleActions:"restart none none reverse"
+    }})
+    .to("#phone", {x:-300, duration: 1}, ">")
+    .from("#companies", {opacity: 0, duration: 1}, "-=.2")
+
+    
+}
+
+loadModel();

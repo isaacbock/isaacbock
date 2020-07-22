@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: #f9f9f9;
 }
 #intro_video {
     height: 100vh;
@@ -8,24 +9,35 @@ body {
     object-fit: cover;
     display: block
 }
-#content {
-    height: 100vh;
-    width: 100%;
-    background: #fafafa;
-    background: linear-gradient(180deg, #fbfbfb 0%, #f9f9f9 50%);
-}
+
+
 *:focus {
     outline: 0;
     outline: none;
 }
+
+#bio {
+    height: 100vh;
+    background: linear-gradient(180deg, #fbfbfb 0%, #f9f9f9 50%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#headshot {
+    border-radius: 50%;
+}
+
 #social_icons {
     width: 75vw;
     margin: 0px;
-    position: relative;
+    /* position: relative;
     top: 50%;
     left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
+    margin-right: -50%; */
+    /* transform: translate(-50%, -50%); */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -57,4 +69,179 @@ body {
 .fa-envelope {
     background: #CB137B;
     color: white;
+}
+
+body {
+    font-family: 'Lora', serif;
+   }
+   
+   h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    text-transform: uppercase;
+   }
+
+:root {
+  --padding: 10vmin;
+  --font-size-large: 8vw;
+  --font-size-medium: 4vw;
+  --font-size-normal: 2vw;
+}
+@media only screen and (min-width: 800px) {
+  :root {
+    --font-size-large: 64px;
+    --font-size-medium: 32px;
+    --font-size-normal: 16px;
+  }
+}
+@media only screen and (max-width: 500px) {
+  :root {
+    --font-size-large: 40px;
+    --font-size-medium: 20px;
+    --font-size-normal: 14px;
+  }
+}
+
+a {
+  color: white;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  margin-top: 10px;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  min-width: 100%;
+  font-family: 'Libre Baskerville', serif;
+  font-weight: 400;
+  font-size: var(--font-size-normal);
+  overflow-x: hidden;
+}
+
+canvas {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.solid {
+  -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+          clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.wireframe {
+  -webkit-clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+          clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+}
+
+.three-dimensional {
+  background: #f9f9f9;
+  position: relative;
+  z-index: 1;
+}
+.three-dimensional .trigger {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+.section {
+  position: relative;
+  padding: var(--padding);
+  --pad2: calc(var(--padding) * 2);
+  width: calc(100vw - var(--pad2));
+  height: calc(100vh - var(--pad2));
+  margin: 0 auto;
+  z-index: 2;
+}
+.section.right {
+  text-align: right;
+}
+h1 {
+  font-size: var(--font-size-large);
+  margin: 0vmin 0 2vmin 0;
+  font-weight: 700;
+  display: inline;
+}
+h2 {
+    font-size: var(--font-size-medium);
+    margin: 0vmin 0 2vmin 0;
+    font-weight: 700;
+}
+
+
+#phone {
+    height: 75vh;
+    width: auto;
+    margin-top: 20px;
+    position: relative;
+}
+#phone > img {
+    position: absolute;
+    width: auto;
+    height: 75vh;
+    left: 50%;
+    transform: translate(-50%,0);
+}
+
+#companies {
+    position: relative;
+    top: -60vh;
+    left: 50%;
+}
+
+#created_for, #presented_to {
+    display: flex;
+    align-items: center;
+}
+
+#created_for > img, #presented_to > img {
+    width: 150px;
+    margin-bottom: 75px;
+    margin-left: 30px;
+}
+
+#portfolio {
+    width: 90vw;
+    max-width: 1100px;
+    margin: 20px;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    
+}
+.portfolio_item {
+    width: 525px;
+    max-width: 95vw;
+    margin: 10px;
+    height: 400px;
+    background-color: #eee;
+}
+.hover_overlay {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: 0.3s;
+    background-color: lightblue;
+    color: white;
+}
+.portfolio_item:hover .hover_overlay {
+    opacity: 1;
+    cursor: pointer;
 }
