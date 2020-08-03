@@ -210,7 +210,7 @@ function setupAnimation(model)
 	
 	scene.render();
 	
-    var sectionDuration = 1;
+    var sectionDuration = .9;
 
     
     // wireframe to solid
@@ -222,8 +222,8 @@ function setupAnimation(model)
 			scrollTrigger: {
 			  trigger: ".blueprint",
               scrub: true,
-			  start: "top 300",
-			  end: "top -200"
+			  start: "top 65%",
+			  end: "top 0"
 			}
         });
 
@@ -246,7 +246,7 @@ function setupAnimation(model)
     tl.to(brain.position, {duration: 1, x: 15, z: 140, ease: 'none'}, delay);
     
     
-    delay += sectionDuration;
+    delay += 0.5*sectionDuration;
 	
     tl.to(brain.position, {x: 0, y: -20, z: -60, ease: 'power1.inOut'}, delay)
     tl.to(brain.rotation, {x: tau*.25, y: tau*-.25, z: 0, ease: 'power1.inOut'}, delay)
@@ -255,9 +255,11 @@ function setupAnimation(model)
     delay += sectionDuration;
 
     tl.to(brain.position, {duration: 0.5*sectionDuration, x: 0, y: 00, z: -200, ease: 'power1.in'}, delay)
-    tl.to(brain.rotation, {x: 0, y: 0, z: 0, ease: 'power1.inOut'}, delay)
+	tl.to(brain.rotation, {x: 0, y: 0, z: 0, ease: 'power1.inOut'}, delay)
 
-    tl.to('canvas',  {duration: 1, x: "0", autoAlpha: 0}, delay);
+	delay += 0.5*sectionDuration;
+
+    tl.to('canvas',  {duration: .1, x: "0", autoAlpha: 0}, delay);
 
 
     
@@ -268,7 +270,7 @@ function setupAnimation(model)
             trigger:"#phone_container",
             start:"top 25%",
             end:"top 10%",
-            toggleActions:"restart none none reverse"
+            toggleActions:"restart none none reset"
         }
     });
 
@@ -276,7 +278,7 @@ function setupAnimation(model)
         trigger:"#phone_container",
         start:"top 25%",
         end:"top top",
-        toggleActions:"restart none none reverse"
+        toggleActions:"restart none none reset"
     }})
     .from("#phone_bubble_1", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5")
     .from("#phone_bubble_2", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5")
@@ -285,14 +287,27 @@ function setupAnimation(model)
     gsap.timeline({scrollTrigger:{
         trigger:"#phone_container",
         start:"bottom bottom",
-        end:"bottom 80%",
+        end:"bottom 70%",
         pin: true,
         scrub: true,
-        toggleActions:"restart none none reverse"
+        toggleActions:"restart none none reset"
     }})
-    .to("#phone", {x:-300, duration: 1}, ">")
-    .from("#companies", {opacity: 0, duration: 1}, "-=.2")
-
+    .to("#phone", {x:-400, duration: 1}, ">");
+	
+	gsap.timeline({scrollTrigger:{
+		trigger:"#phone_container",
+		start:"bottom 85%",
+		end:"bottom 85%",
+		toggleActions:"restart none none reset"
+	}})
+	.from("#created_for_heading", {opacity: 0, x: 100, duration: .5}, ">")
+	.from("#created_for_invisibly", {opacity: 0, scale: 0.8, x: 50, duration: .5}, ">")
+	.from("#created_for_blb", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3")
+	.from("#created_for_chrome", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3")
+	.from("#presented_to_heading", {opacity: 0, x: 100, duration: .5}, "-=.8")
+	.from("#presented_to_disney", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3")
+	.from("#presented_to_warner", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3")
+	.from("#presented_to_lionsgate", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3");
     
 }
 

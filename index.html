@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Prevent Search Engine Indexing -->
+    <meta name="robots" content="noindex">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-172825265-1"></script>
     <script>
@@ -11,10 +13,12 @@
     </script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Favicon -->
+    <link rel='shortcut icon' type='image/x-icon' href='assets//favicon.ico' />
     <!-- Styling -->
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900' rel='stylesheet'>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,700|Montserrat:300" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>Isaac Bock</title>
 </head>
@@ -26,7 +30,7 @@
     </video>
     <div id="bio">
          <!-- Social Icons -->
-         <!-- <img src="assets/IsaacBock.JPG" alt="Isaac Bock" width="250" height="250" id="headshot"> -->
+         <img src="assets/IsaacBock.JPG" alt="Isaac Bock" width="150" height="150" id="headshot">
          <h1>Isaac Bock</h1>
          <h3>Computer Science | Cognitive Neuroscience</h3>
          <h4><em>Washington University in St. Louis, 2022</em></h4>
@@ -34,14 +38,68 @@
             <a href="#mailgo" data-address="isaactbock" data-domain="wustl.edu" class="fa fa-envelope"></a>
             <a href="https://www.instagram.com/isaactbock/" class="fa fa-instagram"></a>
             <a href="https://www.linkedin.com/in/isaactbock/" class="fa fa-linkedin"></a>
-            <a href="https://github.com/isaactbock" class="fa fa-github fa-5x"></a>
+            <a href="https://github.com/isaactbock" class="fa fa-github"></a>
         </div>
+    </div>
+    <div id="featured_projects">
+        <h1>Featured Project</h1>
+        <div class="featured_portfolio">
+            <img src="assets/LibraryScan.png" alt="Library Scan" width="600">
+            <div class="featured_portfolio_content">
+                <h5>Chrome Extension | HTML / CSS / JS</h5>
+                <h2>Library Scan</h2>
+                <!-- <h3>Personal Project</h3> -->
+                <p>
+                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/v/mfckggnkebdpaocogfekaaicafooeiik" alt="Chrome Web Store"></a>
+                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/badge/books%20scanned-1k%2B-blue" alt="Books Scanned"></a>
+                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/badge/books%20found-686%2B-blue" alt="Books Found"></a>
+                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/users/mfckggnkebdpaocogfekaaicafooeiik?color=blue" alt="Users"></a>
+                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/stars/mfckggnkebdpaocogfekaaicafooeiik" alt="Rating"></a>
+                </p>
+                
+                <ul>
+                    <li>Scans any OverDrive library for available eBooks & audiobooks from a Goodreads to-read shelf</li>
+                    <li>2,000+ books scanned / week</li>
+                </ul>
+                <div class="links">
+                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik" target="_blank" rel="noopener"><img src="https://github.com/isaactbock/library-scan/blob/master/media/Chrome%20Web%20Store.png?raw=true" height=75 alt="Available in the Chrome Web Store"></a>
+                    <a href="https://github.com/isaactbock/library-scan" class="fa fa-github fa-5x"></a>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="featured_portfolio reverse">
+            <img src="assets/InvisiblyProject.png" alt="Tinder for Trailers" width="400">
+            <div class="featured_portfolio_content">
+                <h5>Android | Kotlin</h5>
+                <h2>"Tinder for Trailers"</h2>
+                <h3>Invisibly | St. Louis, MO</h3>
+                <ul>
+                    <li>Designed and created a Tinder-style Android app to intelligently pair users with movie trailers</li>
+                    <li>Pitched app to executive teams at Disney, Warner Bros, and Lionsgate following expressed interest</li>
+                    <li>Co-led UI team with specialization in Kotlin, Android Studio, and graphic design</li>
+                </ul>
+                <h3><em>Code unavailable to maintain confidentiality.</em></h3>
+            </div>
+        </div>
+        <div class="featured_portfolio">
+            <img src="assets/InvisiblyProject.png" alt="Body Language Blueprints" width="400">
+            <div class="featured_portfolio_content">
+                <h5>Website | Local by Flywheel, Wordpress, Thinkific, Google Analytics & Tag Manager</h5>
+                <h2>Body Language Blueprints</h2>
+                <h3>Oshkosh, WI</h3>
+                <ul>
+                    <li>Digitized all courses for online purchase</li>
+                    <li>A/B redesign testing yielded XXX% increase in weekly users</li>
+                </ul>
+                <h3><em>bodylanguageblueprints.com | courses.bodylanguageblueprints.com</em></h3>
+            </div>
+        </div> -->
     </div>
     <div class="three-dimensional">
         <div class="trigger"></div>
         <div class="section">
             <h1>Computer Science</h1>
-            <h2>to design & create</h2>
+            <!-- <h2>to create</h2> -->
             <p>Java</p>
             <p>Kotlin</p>
             <p>HTML/CSS/JavaScript</p>
@@ -52,14 +110,15 @@
         <div class="blueprint">
             <div class="section right">
                 <h1>Cognitive Neuroscience</h1>
-                <h2>to do it effectively</h2>
-                <p>A/B Testing</p>
+                <!-- <h2>to do it effectively</h2> -->
+                <p>Human Behavior & Decision Making</p>
+                <p>UX Design</p>
+                <p>A/B Split Testing</p>
                 <p>Data Analysis</p>
-                <p>User Feedback</p>
-                <p>Analytics</p>
+                <p>Analytics & Tracking</p>
             </div>
         </div>
-        <div class="section" id="phone_container">
+        <div class="section full_height" id="phone_container">
             
             <div id="phone">
                 <img src="assets/Phone.png" alt="Phone Screen" id="phone_screen">
@@ -69,29 +128,44 @@
                 <img src="assets/Phone_Brain.png" alt="Phone Brain" id="phone_brain">
             </div>
             <div id="companies">
-                <h3>created for</h2>
+                <h3 id="created_for_heading">created for</h3>
                 <div id="created_for">
-                    <img src="assets/Invisibly.jpeg" alt="Invisibly">
-                    <img src="assets/BLB.png" alt="Body Language Blueprints">
-                    <img src="assets/ChromeWebStore.png" alt="Chrome Web Store">
+                    <img src="assets/Invisibly.jpeg" alt="Invisibly" id="created_for_invisibly">
+                    <img src="assets/BLB.png" alt="Body Language Blueprints" id="created_for_blb">
+                    <img src="assets/ChromeWebStore.png" alt="Chrome Web Store" id="created_for_chrome">
                 </div>
-                <h3>presented to</h2>
+                <h3 id="presented_to_heading">presented to</h3>
                 <div id="presented_to">
-                    <img src="assets/Disney.png" alt="Disney">
-                    <img src="assets/WarnerBros.png" alt="Warner Bros.">
-                    <img src="assets/Lionsgate.png" alt="Lionsgate">
+                    <img src="assets/Disney.png" alt="Disney" id="presented_to_disney">
+                    <img src="assets/WarnerBros.png" alt="Warner Bros." id="presented_to_warner">
+                    <img src="assets/Lionsgate.png" alt="Lionsgate" id="presented_to_lionsgate">
                 </div>
             </div>
             
         </div>
     </div>
-    <div id="portfolio">
-        <div class="portfolio_item">
-            <div class="hover_overlay">
-              
+    <!-- <div id="portfolio">
+        <h1>All Projects</h1>
+        <div id="portfolio_tiles">
+            <div class="portfolio_item">
+                <div class="hover_overlay">
+                    <h2>Tinder for Trailers</h2>
+                </div>
+                <img src="assets/InvisiblyProject.png" alt="Tinder for Trailers" width="175">
+            </div>
+            <div class="portfolio_item">
+                <div class="hover_overlay">
+                    <h2>Library Scan</h2>
+                </div>
+                <img src="assets/LibraryScan.png" alt="Library Scan" width="300">
+            </div>
+            <div class="portfolio_item">
+                <div class="hover_overlay">
+                    <h2>Body Language Blueprints</h2>
+                </div>
             </div>
         </div>
-    </div>
+    </div> -->
     
     <!-- GSAP / ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.js"></script>
