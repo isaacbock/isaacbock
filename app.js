@@ -105,7 +105,7 @@ class Scene
 		this.scene.add( this.light );
 
 		this.softLight = new THREE.AmbientLight( 0xffffff, 1.5 );
-		this.scene.add(this.softLight)
+		this.scene.add(this.softLight);
 
 		// group
 
@@ -135,10 +135,13 @@ class Scene
 		this.modelGroup.add(model);
 		this.modelGroup.add(line);
 		this.scene.add(this.modelGroup);
+
+		this.render = this.render.bind(this);
+		this.onResize = this.onResize.bind(this);
+
 	}
 	
-	render = () =>
-	{
+	render() {
 		for ( var ii = 0; ii < this.views.length; ++ ii ) {
 
 			var view = this.views[ ii ];
@@ -156,8 +159,7 @@ class Scene
 		}
 	}
 	
-	onResize = () => 
-	{
+	onResize() { 
 		this.w = window.innerWidth;
 		this.h = window.innerHeight;
 		
@@ -205,12 +207,12 @@ function setupAnimation(model)
 	let tau = Math.PI * 2;
 
     gsap.set(brain.rotation, {x: 0, y: tau/4, z: 0});
-    gsap.set(brain.scale, {x: .3, y: .3, z: .3});
+    gsap.set(brain.scale, {x: 0.3, y: 0.3, z: 0.3});
     gsap.set(brain.position, {x: 30, y: -50, z: 140});
 	
 	scene.render();
 	
-    var sectionDuration = .9;
+    var sectionDuration = 0.9;
 
     
     // wireframe to solid
@@ -248,24 +250,24 @@ function setupAnimation(model)
     
     delay += 0.5*sectionDuration;
 	
-    tl.to(brain.position, {x: 0, y: -20, z: -60, ease: 'power1.inOut'}, delay)
-    tl.to(brain.rotation, {x: tau*.25, y: tau*-.25, z: 0, ease: 'power1.inOut'}, delay)
+    tl.to(brain.position, {x: 0, y: -20, z: -60, ease: 'power1.inOut'}, delay);
+    tl.to(brain.rotation, {x: tau*0.25, y: tau*-0.25, z: 0, ease: 'power1.inOut'}, delay);
    
 	
     delay += sectionDuration;
 
-    tl.to(brain.position, {duration: 0.5*sectionDuration, x: 0, y: 00, z: -200, ease: 'power1.in'}, delay)
-	tl.to(brain.rotation, {x: 0, y: 0, z: 0, ease: 'power1.inOut'}, delay)
+    tl.to(brain.position, {duration: 0.5*sectionDuration, x: 0, y: 0, z: -200, ease: 'power1.in'}, delay);
+	tl.to(brain.rotation, {x: 0, y: 0, z: 0, ease: 'power1.inOut'}, delay);
 
 	delay += 0.5*sectionDuration;
 
-    tl.to('canvas',  {duration: .1, x: "0", autoAlpha: 0}, delay);
+    tl.to('canvas',  {duration: 0.1, x: "0", autoAlpha: 0}, delay);
 
 
     
 
     gsap.from("#phone_brain", {
-        y:-100, scale: 0.9, opacity:0, duration:.5,
+        y:-100, scale: 0.9, opacity:0, duration:0.5,
         scrollTrigger: {
             trigger:"#phone_container",
             start:"top 25%",
@@ -280,9 +282,9 @@ function setupAnimation(model)
         end:"top top",
         toggleActions:"restart none none reset"
     }})
-    .from("#phone_bubble_1", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5")
-    .from("#phone_bubble_2", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5")
-    .from("#phone_bubble_3", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5");
+    .from("#phone_bubble_1", {x:30, opacity:0, ease:"back", duration:0.75}, "-=.5")
+    .from("#phone_bubble_2", {x:30, opacity:0, ease:"back", duration:0.75}, "-=.5")
+    .from("#phone_bubble_3", {x:30, opacity:0, ease:"back", duration:0.75}, "-=.5");
 
     gsap.timeline({scrollTrigger:{
         trigger:"#phone_container",
@@ -300,14 +302,14 @@ function setupAnimation(model)
 		end:"bottom 85%",
 		toggleActions:"restart none none reset"
 	}})
-	.from("#created_for_heading", {opacity: 0, x: 100, duration: .5}, ">")
-	.from("#created_for_invisibly", {opacity: 0, scale: 0.8, x: 50, duration: .5}, ">")
-	.from("#created_for_blb", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3")
-	.from("#created_for_chrome", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3")
-	.from("#presented_to_heading", {opacity: 0, x: 100, duration: .5}, "-=.8")
-	.from("#presented_to_disney", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3")
-	.from("#presented_to_warner", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3")
-	.from("#presented_to_lionsgate", {opacity: 0, scale: 0.8, x: 50, duration: .5}, "-=.3");
+	.from("#created_for_heading", {opacity: 0, x: 100, duration: 0.5}, ">")
+	.from("#created_for_invisibly", {opacity: 0, scale: 0.8, x: 50, duration: 0.5}, ">")
+	.from("#created_for_blb", {opacity: 0, scale: 0.8, x: 50, duration: 0.5}, "-=.3")
+	.from("#created_for_chrome", {opacity: 0, scale: 0.8, x: 50, duration: 0.5}, "-=.3")
+	.from("#presented_to_heading", {opacity: 0, x: 100, duration: 0.5}, "-=0.8")
+	.from("#presented_to_disney", {opacity: 0, scale: 0.8, x: 50, duration: 0.5}, "-=.3")
+	.from("#presented_to_warner", {opacity: 0, scale: 0.8, x: 50, duration: 0.5}, "-=.3")
+	.from("#presented_to_lionsgate", {opacity: 0, scale: 0.8, x: 50, duration: 0.5}, "-=.3");
     
 }
 
