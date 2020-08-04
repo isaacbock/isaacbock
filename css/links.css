@@ -1,44 +1,55 @@
-#main {
-    margin: 0px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
+body {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.fa {
-    padding: 20px;
-    font-size: 30px;
-    width: 30px;
-    text-align: center;
-    text-decoration: none;
-    margin: 10px 10px;
+#headshot {
     border-radius: 50%;
-  }
-  .fa:hover {
-      opacity: 0.7;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 25px;
 }
-  
 
-.fa-linkedin {
-    background: #007bb5;
+h1 {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
     color: white;
+    font-size: 16px;
+    font-weight: normal;
 }
-.fa-github {
-    background: #211F1F;
-    color: white;
+
+#links {
+    margin-top: 25px;
+    width: 675px;
+    max-width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-.fa-instagram {
-    background: #B938B1;
-    color: white;
+#links > a {
+   width: 100%;
+   text-decoration: none;
+   font-size: 15px;
+   margin-bottom: 20px;
+   background-color: transparent;
+   border: 2px solid white;
+   padding-top: 16px;
+   padding-bottom: 16px;
+   color: white;
+   font-family: 'Montserrat', sans-serif;
+   display: block;
+   text-align: center;
+   transition: 0.3s;
 }
-.fa-envelope {
-    background: #CB137B;
-    color: white;
+#links > a:hover {
+    background-color: white;
+    color: #23a6d5;
 }
 
 /* Pure CSS Gradient Background Animation via https://manuelpinto.in/ */
