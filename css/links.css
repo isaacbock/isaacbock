@@ -4,15 +4,16 @@ body {
     justify-content: center;
     min-height: 100vh;
     font-family: 'Montserrat', sans-serif;
+    margin: 0;
 }
 
+/* photo & username */
 #headshot {
     border-radius: 50%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 25px;
 }
-
 h1 {
     margin-left: auto;
     margin-right: auto;
@@ -21,7 +22,7 @@ h1 {
     font-size: 16px;
     font-weight: normal;
 }
-
+/* links */
 #links {
     margin-top: 25px;
     width: 675px;
