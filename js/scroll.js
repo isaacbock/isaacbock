@@ -9,6 +9,7 @@ $( document ).ready(function() {
 	// header bar navigation w/ smooth scroll
 	$("#to_about").click( () => scrollIntoViewCustom("header"));
 	$("#to_strengths").click( () => scrollIntoViewCustom("strengths"));
+	$("#down").click( () => scrollIntoViewCustom("strengths"));
 	$("#to_portfolio").click( () => scrollIntoViewCustom("featured_projects"));
 });
 
@@ -275,7 +276,7 @@ function setupAnimation(model)
 
 
     
-
+	// fade in brain
     gsap.from("#phone_brain", {
         y:-100, scale: 0.9, opacity:0, duration:.5,
         scrollTrigger: {
@@ -286,6 +287,7 @@ function setupAnimation(model)
         }
     });
 
+	// notification bubbles pop in
     gsap.timeline({scrollTrigger:{
         trigger:"#phone_container",
         start:"top 25%",
@@ -296,9 +298,10 @@ function setupAnimation(model)
     .from("#phone_bubble_2", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5")
     .from("#phone_bubble_3", {x:30, opacity:0, ease:"back", duration:.75}, "-=.5");
 
+	// slide phone to left edge
     gsap.timeline({scrollTrigger:{
         trigger:"#phone_container",
-        start:"bottom bottom",
+		start:"bottom bottom",
         end:"bottom 70%",
         pin: true,
         scrub: true,
@@ -306,6 +309,7 @@ function setupAnimation(model)
     }})
     .to("#phone", {x:-400, duration: 1}, ">");
 	
+	// fade in companies
 	gsap.timeline({scrollTrigger:{
 		trigger:"#phone_container",
 		start:"bottom 85%",
