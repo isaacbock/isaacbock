@@ -195,6 +195,9 @@ a:hover {
     #contact {
         display: inline !important;
     }
+    #start_nav_link {
+        display: none !important;
+    }
     #library_scan_logo {
         height: 50px;
         margin-right: 15px;
