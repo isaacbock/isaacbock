@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Design inspired by https://markd.ltd/products/battle-tabs -->
+    <!-- Prevent Search Engine Indexing -->
+    <meta name="robots" content="noindex">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-172825265-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-172825265-1');
+    </script>
+    <!-- Hotjar -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:1946757,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Favicon -->
+    <link rel='shortcut icon' type='image/x-icon' href='assets/favicon.ico'/>
+    <!-- Styling -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/libraryScan.css">
+    <title>Isaac Bock</title>
+</head>
+<body>
+    <div id="header">
+        <a href="/" id="logo">&lt; ISAAC B.</a>
+        <div id="menu">
+            <a href="#start">🚀 Get Started</a>
+            <a href="#faq">🙋 FAQ</a>
+            <a href="#mailgo" data-address="isaactbock" data-domain="wustl.edu" id="contact">👋 Contact</a>
+        </div>
+    </div>
+    <div id="content">
+        <div id="text">
+            <div>
+                <img src="assets/LibraryScanLogo.png" alt="Library Scan Logo" id="library_scan_logo">
+                <div>
+                    <h2>Goodreads + OverDrive:</h2>
+                    <h1>Library Scan</h1>
+                </div>
+            </div>
+            <p>Scan any OverDrive library for available eBooks & audiobooks from your Goodreads to-read shelf. Find titles immediately available for checkout, place holds on upcoming books, filter by media type & availability, and automatically re-scan daily.</p>
+            <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik" id="download">Add to Chrome</a>
+            <div id="already-downloaded" style="display: none;">
+                <i class="fa fa-check-circle"></i>
+                <h3>Already downloaded.</h3>
+                <a href="#start">Let's get started!</a>
+            </div>
+        </div>
+        <div>
+            <img src="assets/LibraryScanScreenshot.png" alt="Library Scan Screenshot" id="screenshot">
+        </div>
+    </div>
+    <div id="start"></div>
+    <div id="faq"></div>
+
+    <!-- Mailgo Email Linking -->
+    <script src="https://cdn.jsdelivr.net/npm/mailgo@0.9.7/dist/mailgo.min.js"></script>
+</body>
+</html>
