@@ -7,6 +7,12 @@ body {
     margin: 0;
     color: #222222;
 }
+.grey {
+    background-color: #f9f9ff;
+}
+.anchor {
+    scroll-margin-top: 70px;
+}
 h1, h2 {
     text-transform: uppercase;
 }
@@ -18,12 +24,12 @@ h1 {
 }
 h2 {
     margin: 0;
+    margin-top: 25px;
     font-size: 25px;
     font-weight: 300;
 }
 p {
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 10px;
     font-size: 18px;
     font-weight: 300;
     color: #555555;
@@ -50,6 +56,13 @@ a:hover {
     justify-content: space-between;
     align-items: center;
     text-transform: uppercase;
+    position: fixed;
+    top: 0;
+    width: calc(100% - 60px);
+    transition: 1000ms;
+}
+#header.shadow {
+    box-shadow: 0px 0px 50px #0000004b;
 }
 #logo {
     font-size: 18px;
@@ -63,12 +76,11 @@ a:hover {
     margin-left: 15px;
 }
 
-#content {
-    background-color: #f9f9ff;
+#banner {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 100px;
+    padding-top: 175px;
     padding-bottom: 100px;
 }
 #library_scan_logo {
@@ -86,6 +98,10 @@ a:hover {
 #text > div {
     display: flex;
     align-items: center;
+}
+#text > p {
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 #download {
     background-color: #40d5fa;;
@@ -125,12 +141,30 @@ a:hover {
     width: 250px;
     box-shadow: 3px 3px 5px #00000056, 0px 0px 10px #00000028;
 }
+#content {
+    padding-bottom: 100px;
+}
+#content > div {
+    max-width: 950px;
+    margin: auto;
+    padding: 50px;
+}
+#changelog > div {
+    display: flex;
+    flex-wrap: wrap;
+}
+#changelog > div > div {
+    margin-right: 75px;
+}
+.date {
+    font-size: 14px;
+}
 
 
 @media only screen and (max-width: 1000px) {
-    #content {
+    #banner {
         flex-direction: column-reverse;
-        padding-top: 50px;
+        padding-top: 125px;
         padding-bottom: 50px;
     }
     #text {
@@ -149,6 +183,9 @@ a:hover {
     #screenshot {
         width: 200px;
         margin-bottom: 50px;
+    }
+    #content {
+        padding-bottom: 50px;
     }
 }
 @media only screen and (max-width: 500px) {
@@ -177,6 +214,9 @@ a:hover {
     #already-downloaded > i  {
         font-size: 50px;
         margin-bottom: 10px;
+    }
+    #content {
+        padding-bottom: 20px;
     }
 }
 @media only screen and (max-width: 350px) {
