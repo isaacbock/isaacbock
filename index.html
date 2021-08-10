@@ -1,266 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- Prevent Search Engine Indexing -->
-    <meta name="robots" content="noindex">
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-172825265-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-172825265-1');
-    </script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- Favicon -->
-    <link rel='shortcut icon' type='image/x-icon' href='assets//favicon.ico' />
-    <!-- Styling -->
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900' rel='stylesheet'>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <title>Isaac Bock</title>
-</head>
-<body>
-    <!-- Lettering Video -->
-    <video autoplay muted playsinline id="intro_video">
-        <source src="assets/LetteredIntro.mp4" type="video/mp4">
-        Your browser does not support videos.
-    </video>
-    <div id="page_one">
-        <div id="header">
-            <!-- scroll.js also manually adds .click() smooth scrolling for header links -->
-            <a id="to_about" href="#header">about</a>
-            <a id="to_strengths" href="#strengths">strengths</a>
-            <a id="to_portfolio" href="#featured_projects">portfolio</a>
-        </div>
-        <div id="bio">
-            <!-- Social Icons -->
-            <img src="assets/IsaacBock.JPG" alt="Isaac Bock" width="150" height="150" id="headshot">
-            <h1>Isaac Bock</h1>
-            <h3>Computer Science | Cognitive Neuroscience</h3>
-            <h4><em>Washington University in St. Louis, 2022</em></h4>
-            <div id="social_icons">
-                <a href="#mailgo" data-address="isaactbock" data-domain="wustl.edu" class="fa fa-envelope"></a>
-                <a href="https://www.instagram.com/isaactbock/" class="fa fa-instagram" target="_blank" rel="noopener"></a>
-                <a href="https://www.linkedin.com/in/isaactbock/" class="fa fa-linkedin" target="_blank" rel="noopener"></a>
-                <a href="https://github.com/isaactbock" class="fa fa-github" target="_blank" rel="noopener"></a>
-            </div>
-        </div>
-        <div id="down">↓</div>
-    </div>
-    <div id="strengths" class="three-dimensional">
-        <div class="trigger"></div>
-        <div class="section">
-            <h1>Computer Science</h1>
-            <!-- <h2>to create</h2> -->
-            <p>Java</p>
-            <p>Kotlin</p>
-            <p>HTML/CSS/JavaScript</p>
-            <p>PHP</p>
-            <p>SQL</p>
-            <p>C++</p>
-        </div>
-        <div class="blueprint">
-            <div class="section right">
-                <h1>Cognitive Neuroscience</h1>
-                <!-- <h2>to do it effectively</h2> -->
-                <p>Human Behavior & Decision Making</p>
-                <p>UX Design</p>
-                <p>A/B Split Testing</p>
-                <p>Data Analysis</p>
-                <p>Analytics & Tracking</p>
-            </div>
-        </div>
-        <div class="section full_height" id="phone_container">
-            
-            <div id="phone">
-                <img src="assets/Phone.png" alt="Phone Screen" id="phone_screen">
-                <img src="assets/Phone_Bubble1.png" alt="Phone Bubble 1" id="phone_bubble_1">
-                <img src="assets/Phone_Bubble2.png" alt="Phone Bubble 2" id="phone_bubble_2">
-                <img src="assets/Phone_Bubble3.png" alt="Phone Bubble 3" id="phone_bubble_3">
-                <img src="assets/Phone_Brain.png" alt="Phone Brain" id="phone_brain">
-            </div>
-            <div id="companies">
-                <h3 id="created_for_heading">created for</h3>
-                <div id="created_for">
-                    <img src="assets/Invisibly.jpeg" alt="Invisibly" id="created_for_invisibly">
-                    <img src="assets/BLB.png" alt="Body Language Blueprints" id="created_for_blb">
-                    <img src="assets/ChromeWebStore.png" alt="Chrome Web Store" id="created_for_chrome">
-                </div>
-                <h3 id="presented_to_heading">presented to</h3>
-                <div id="presented_to">
-                    <img src="assets/Disney.png" alt="Disney" id="presented_to_disney">
-                    <img src="assets/WarnerBros.png" alt="Warner Bros." id="presented_to_warner">
-                    <img src="assets/Lionsgate.png" alt="Lionsgate" id="presented_to_lionsgate">
-                </div>
-            </div>
-            
-        </div>
-    </div>
-    <div id="featured_projects" class="section">
-        <div class="featured_portfolio">
-            <img src="assets/LibraryScan.png" alt="Library Scan" width="600">
-            <div class="featured_portfolio_content">
-                <h5>Chrome Extension | HTML / CSS / JS</h5>
-                <h2>Library Scan</h2>
-                <!-- <h3>Personal Project</h3> -->
-                <p>
-                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/v/mfckggnkebdpaocogfekaaicafooeiik" alt="Chrome Web Store"></a>
-                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/badge/books%20scanned-33.4k%2B-blue" alt="Books Scanned"></a>
-                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/badge/books%20found-29.0k%2B-blue" alt="Books Found"></a>
-                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/users/mfckggnkebdpaocogfekaaicafooeiik?color=blue" alt="Users"></a>
-                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/stars/mfckggnkebdpaocogfekaaicafooeiik" alt="Rating"></a>
-                </p>
-                
-                <ul>
-                    <li>Scans any OverDrive library for available eBooks & audiobooks from a Goodreads to-read shelf</li>
-                    <li>1k+ books scanned daily</li>
-                </ul>
-                <div class="links">
-                    <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik" target="_blank" rel="noopener"><img src="https://github.com/isaactbock/library-scan/blob/master/media/Chrome%20Web%20Store.png?raw=true" height=75 alt="Available in the Chrome Web Store"></a>
-                    <a href="https://github.com/isaactbock/library-scan" class="fa fa-github fa-5x"></a>
-                </div>
-            </div>
-        </div>
-        <div class="featured_portfolio reverse">
-            <img src="assets/LibraryScan.png" alt="Library Scan" width="600">
-            <div class="featured_portfolio_content">
-                <h5>Android | Kotlin</h5>
-                <h2>"Tinder for Trailers"</h2>
-                <h3>Invisibly | St. Louis, MO</h3>
-                <ul>
-                    <li>Designed and created a Tinder-style Android app to intelligently pair users with movie trailers</li>
-                    <li>Pitched app to executive teams at Disney, Warner Bros, and Lionsgate following expressed interest</li>
-                    <li>Co-led UI team with specialization in Kotlin, Android Studio, and graphic design</li>
-                </ul>
-                <h3><em>Code unavailable to maintain confidentiality.</em></h3>
-            </div>
-        </div>
-        <div class="featured_portfolio">
-            <img src="assets/NYC_Covid.png" alt="NYC COVID-19 Metro Risks" width="600">
-            <div class="featured_portfolio_content">
-                <h5>D3.js / Web Development</h5>
-                <h2>NYC COVID-19 Metro Risks</h2>
-                <!-- <h3>Oshkosh, WI</h3> -->
-                <ul>
-                    <li>Digitized all courses for online purchase</li>
-                    <li>A/B redesign testing yielded XXX% increase in weekly users</li>
-                </ul>
-                <h3><em>bodylanguageblueprints.com | courses.bodylanguageblueprints.com</em></h3>
-            </div>
-        </div>
-    </div>
-    <!-- Design inspired by https://www.brianatiyeh.com/#featured-work -->
-    <div id="portfolio">
-        <h1>All Projects</h1>
-        <div id="portfolio_tiles">
-            <div class="portfolio_item">
-                <!-- Item 1: Tinder for Trailers -->
-                <div class="hover_overlay">
-                    <p>Invisibly | St. Louis, MO</p>
-                    <h2><strong>Tinder for Trailers</strong></h2>
-                </div>
-                <img src="assets/LibraryScan.png" alt="Library Scan">
-                <div class="portfolio_popup" style="display: none;">
-                    <div class="portfolio_popup_content">
-                        <button class="fa fa-close"></button>
-                        <div class="portfolio_popup_image"><img src="assets/LibraryScan.png" alt="Library Scan"></div>
-                        <div class="portfolio_popup_description">
-                            <p>Invisibly | St. Louis, MO</p>
-                            <h2><strong>Tinder for Trailers</strong></h2>
-                            <ul>
-                                <li>Designed and created a Tinder-style Android app to intelligently pair users with movie trailers</li>
-                                <li>Pitched app to executive teams at Disney, Warner Bros, and Lionsgate following expressed interest</li>
-                                <li>Co-led UI team with specialization in Kotlin, Android Studio, and graphic design</li>
-                            </ul>
-                            <h3><em>Code unavailable to maintain confidentiality.</em></h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-             <!-- Item 2: Library Scan -->
-            <div class="portfolio_item">
-                <div class="hover_overlay">
-                    <p>Chrome Extension</p>
-                    <h2><strong>Library Scan</strong></h2>
-                </div>
-                <img src="assets/LibraryScan.png" alt="Library Scan">
-                <div class="portfolio_popup" style="display: none;">
-                    <div class="portfolio_popup_content">
-                        <button class="fa fa-close"></button>
-                        <div class="portfolio_popup_image"><img src="assets/LibraryScan.png" alt="Library Scan"></div>
-                        <div class="portfolio_popup_description">
-                            <p>Chrome Extension</p>
-                            <h2><strong>Library Scan</strong></h2>
-                            <p>
-                                <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/v/mfckggnkebdpaocogfekaaicafooeiik" alt="Chrome Web Store"></a>
-                                <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/badge/books%20scanned-33.4k%2B-blue" alt="Books Scanned"></a>
-                                <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/badge/books%20found-29.0k%2B-blue" alt="Books Found"></a>
-                                <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/users/mfckggnkebdpaocogfekaaicafooeiik?color=blue" alt="Users"></a>
-                                <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"><img src="https://img.shields.io/chrome-web-store/stars/mfckggnkebdpaocogfekaaicafooeiik" alt="Rating"></a>
-                            </p>
-                            
-                            <ul>
-                                <li>Scans any OverDrive library for available eBooks & audiobooks from a Goodreads to-read shelf</li>
-                                <li>1k+ books scanned daily</li>
-                            </ul>
-                            <div class="links">
-                                <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik" target="_blank" rel="noopener"><img src="https://github.com/isaactbock/library-scan/blob/master/media/Chrome%20Web%20Store.png?raw=true" height=75 alt="Available in the Chrome Web Store"></a>
-                                <a href="https://github.com/isaactbock/library-scan" class="fa fa-github fa-5x"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-             <!-- Item 3: Body Language Blueprints -->
-            <div class="portfolio_item">
-                <div class="hover_overlay">
-                    <p>Oshkosh, WI</p>
-                    <h2><strong>Body Language Blueprints</strong></h2>
-                </div>
-                <img src="assets/NYC_Covid.png" alt="NYC COVID-19 Metro Risks">
-                <div class="portfolio_popup" style="display: none;">
-                    <div class="portfolio_popup_content">
-                        <button class="fa fa-close"></button>
-                        <div class="portfolio_popup_image"><img src="assets/NYC_Covid.png" alt="NYC COVID-19 Metro Risks"></div>
-                        <div class="portfolio_popup_description">
-                            <p>Oshkosh, WI</p>
-                            <h2><strong>Body Language Blueprints</strong></h2>
-                            <ul>
-                                <li>Digitized all courses for online purchase</li>
-                                <li>A/B redesign testing yielded XXX% increase in weekly users</li>
-                            </ul>
-                            <h3><em>bodylanguageblueprints.com | courses.bodylanguageblueprints.com</em></h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- GSAP / ScrollTrigger -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/ScrollTrigger.js"></script>
-    <!-- 3D Objects -->
-    <script src="https://unpkg.com/three@0.117.1/build/three.min.js"></script>
-    <script src="https://unpkg.com/three@0.117.1/examples/js/loaders/OBJLoader.js"></script>
-    <!-- Mailgo Email Linking -->
-    <script src="https://cdn.jsdelivr.net/npm/mailgo@0.9.7/dist/mailgo.min.js"></script>
-    <!-- JS -->
-    <script src="js/portfolio.js"></script>
-    <script src="js/scroll.js"></script>
-    <!-- Chatbot -->
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger
-        intent="WELCOME"
-        chat-title="AI-saac"
-        agent-id="912ba2fa-c89d-4002-b29a-8f25a9a2e530"
-        language-code="en"
-        wait-open="true"
-    ></df-messenger>
-</body>
+	<head>
+		<!-- Prevent Search Engine Indexing -->
+		<meta name="robots" content="noindex" />
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=UA-172825265-1"
+		></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
+			gtag("config", "UA-172825265-1");
+		</script>
+		<!-- Font Awesome Icons -->
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		/>
+		<!-- Favicon -->
+		<link rel="shortcut icon" type="image/x-icon" href="assets//favicon.ico" />
+		<!-- Styling -->
+		<link
+			href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900"
+			rel="stylesheet"
+		/>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<title>Isaac Bock</title>
+	</head>
+	<body>
+		<!-- Lettering Video -->
+		<video autoplay muted playsinline id="intro_video">
+			<source src="assets/LetteredIntro.mp4" type="video/mp4" />
+			Your browser does not support videos.
+		</video>
+		<div id="page_one">
+			<div id="header">
+				<!-- scroll.js also manually adds .click() smooth scrolling for header links -->
+				<a id="to_about" href="#header">about</a>
+				<a id="to_skills" href="#skills">skills</a>
+				<a id="to_portfolio" href="#featured_projects">portfolio</a>
+			</div>
+			<div id="bio">
+				<!-- Social Icons -->
+				<img
+					src="assets/IsaacBock.JPG"
+					alt="Isaac Bock"
+					width="150"
+					height="150"
+					id="headshot"
+				/>
+				<h1>Isaac Bock</h1>
+				<h3>Computer Science | Cognitive Neuroscience</h3>
+				<h4><em>Washington University in St. Louis, 2022</em></h4>
+				<div id="social_icons">
+					<a
+						href="#mailgo"
+						data-address="isaactbock"
+						data-domain="wustl.edu"
+						class="fa fa-envelope"
+					></a>
+					<a
+						href="https://www.instagram.com/isaactbock/"
+						class="fa fa-instagram"
+						target="_blank"
+						rel="noopener"
+					></a>
+					<a
+						href="https://www.linkedin.com/in/isaactbock/"
+						class="fa fa-linkedin"
+						target="_blank"
+						rel="noopener"
+					></a>
+					<a
+						href="https://github.com/isaactbock"
+						class="fa fa-github"
+						target="_blank"
+						rel="noopener"
+					></a>
+				</div>
+			</div>
+			<div id="down">↓</div>
+		</div>
+		<div id="skills" class="three-dimensional">
+			<div class="trigger"></div>
+			<div class="section">
+				<h1>Computer Science</h1>
+				<!-- <h2>to create</h2> -->
+				<p>Java</p>
+				<p>Kotlin</p>
+				<p>HTML/CSS/JavaScript</p>
+				<p>PHP</p>
+				<p>SQL</p>
+				<p>C++</p>
+			</div>
+			<div class="blueprint">
+				<div class="section right">
+					<h1>Cognitive Neuroscience</h1>
+					<!-- <h2>to do it effectively</h2> -->
+					<p>Human Behavior & Decision Making</p>
+					<p>UX Design</p>
+					<p>A/B Split Testing</p>
+					<p>Data Analysis</p>
+					<p>Analytics & Tracking</p>
+				</div>
+			</div>
+			<div class="section full_height" id="phone_container">
+				<div id="phone">
+					<img src="assets/Phone.png" alt="Phone Screen" id="phone_screen" />
+					<img
+						src="assets/Phone_Bubble1.png"
+						alt="Phone Bubble 1"
+						id="phone_bubble_1"
+					/>
+					<img
+						src="assets/Phone_Bubble2.png"
+						alt="Phone Bubble 2"
+						id="phone_bubble_2"
+					/>
+					<img
+						src="assets/Phone_Bubble3.png"
+						alt="Phone Bubble 3"
+						id="phone_bubble_3"
+					/>
+					<img
+						src="assets/Phone_Brain.png"
+						alt="Phone Brain"
+						id="phone_brain"
+					/>
+				</div>
+				<div id="companies">
+					<h3 id="created_for_heading">created for</h3>
+					<div id="created_for">
+						<img
+							src="assets/Invisibly.jpeg"
+							alt="Invisibly"
+							id="created_for_invisibly"
+						/>
+						<img
+							src="assets/BLB.png"
+							alt="Body Language Blueprints"
+							id="created_for_blb"
+						/>
+						<img
+							src="assets/ChromeWebStore.png"
+							alt="Chrome Web Store"
+							id="created_for_chrome"
+						/>
+					</div>
+					<h3 id="presented_to_heading">& presented to</h3>
+					<div id="presented_to">
+						<img
+							src="assets/Disney.png"
+							alt="Disney"
+							id="presented_to_disney"
+						/>
+						<img
+							src="assets/WarnerBros.png"
+							alt="Warner Bros."
+							id="presented_to_warner"
+						/>
+						<img
+							src="assets/Lionsgate.png"
+							alt="Lionsgate"
+							id="presented_to_lionsgate"
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="featured_projects" class="section">
+			<div class="featured_portfolio">
+				<img src="assets/LibraryScan.png" alt="Library Scan" width="600" />
+				<div class="featured_portfolio_content">
+					<h5>Chrome Extension | HTML / CSS / JS</h5>
+					<h2>Library Scan</h2>
+					<!-- <h3>Personal Project</h3> -->
+					<p>
+						<a
+							href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+						>
+							<img
+								src="https://img.shields.io/chrome-web-store/v/mfckggnkebdpaocogfekaaicafooeiik"
+								alt="Chrome Web Store"
+							/>
+						</a>
+						<a
+							href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+						>
+							<img
+								src="https://img.shields.io/badge/books%20scanned-33.4k%2B-blue"
+								alt="Books Scanned"
+							/>
+						</a>
+						<a
+							href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+						>
+							<img
+								src="https://img.shields.io/badge/books%20found-29.0k%2B-blue"
+								alt="Books Found"
+							/>
+						</a>
+						<a
+							href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+						>
+							<img
+								src="https://img.shields.io/chrome-web-store/users/mfckggnkebdpaocogfekaaicafooeiik?color=blue"
+								alt="Users"
+							/>
+						</a>
+						<a
+							href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+						>
+							<img
+								src="https://img.shields.io/chrome-web-store/stars/mfckggnkebdpaocogfekaaicafooeiik"
+								alt="Rating"
+							/>
+						</a>
+					</p>
+
+					<ul>
+						<li>
+							Scans any OverDrive library for available eBooks & audiobooks from
+							a Goodreads to-read shelf
+						</li>
+						<li>1k+ books scanned daily</li>
+					</ul>
+					<div class="links">
+						<a
+							href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+							target="_blank"
+							rel="noopener"
+						>
+							<img
+								src="https://github.com/isaactbock/library-scan/blob/master/media/Chrome%20Web%20Store.png?raw=true"
+								height="75"
+								alt="Available in the Chrome Web Store"
+							/>
+						</a>
+						<a
+							href="https://github.com/isaactbock/library-scan"
+							class="fa fa-github fa-5x"
+						></a>
+					</div>
+				</div>
+			</div>
+			<div class="featured_portfolio reverse">
+				<img src="assets/LibraryScan.png" alt="Library Scan" width="600" />
+				<div class="featured_portfolio_content">
+					<h5>Android | Kotlin</h5>
+					<h2>"Tinder for Trailers"</h2>
+					<h3>Invisibly | St. Louis, MO</h3>
+					<ul>
+						<li>
+							Designed and created a Tinder-style Android app to intelligently
+							pair users with movie trailers
+						</li>
+						<li>
+							Pitched app to executive teams at Disney, Warner Bros, and
+							Lionsgate following expressed interest
+						</li>
+						<li>
+							Co-led UI team with specialization in Kotlin, Android Studio, and
+							graphic design
+						</li>
+					</ul>
+					<h3><em>Code unavailable to maintain confidentiality.</em></h3>
+				</div>
+			</div>
+			<div class="featured_portfolio">
+				<img
+					src="assets/NYC_Covid.png"
+					alt="NYC COVID-19 Metro Risks"
+					width="600"
+				/>
+				<div class="featured_portfolio_content">
+					<h5>D3.js / Web Development</h5>
+					<h2>NYC COVID-19 Metro Risks</h2>
+					<!-- <h3>Oshkosh, WI</h3> -->
+					<ul>
+						<li>Digitized all courses for online purchase</li>
+						<li>A/B redesign testing yielded XXX% increase in weekly users</li>
+					</ul>
+					<h3>
+						<em>
+							bodylanguageblueprints.com | courses.bodylanguageblueprints.com
+						</em>
+					</h3>
+				</div>
+			</div>
+		</div>
+		<!-- Design inspired by https://www.brianatiyeh.com/#featured-work -->
+		<div id="portfolio">
+			<h1>All Projects</h1>
+			<div id="portfolio_tiles">
+				<div class="portfolio_item">
+					<!-- Item 1: Tinder for Trailers -->
+					<div class="hover_overlay">
+						<p>Invisibly | St. Louis, MO</p>
+						<h2><strong>Tinder for Trailers</strong></h2>
+					</div>
+					<img src="assets/LibraryScan.png" alt="Library Scan" />
+					<div class="portfolio_popup" style="display: none">
+						<div class="portfolio_popup_content">
+							<button class="fa fa-close"></button>
+							<div class="portfolio_popup_image">
+								<img src="assets/LibraryScan.png" alt="Library Scan" />
+							</div>
+							<div class="portfolio_popup_description">
+								<p>Invisibly | St. Louis, MO</p>
+								<h2><strong>Tinder for Trailers</strong></h2>
+								<ul>
+									<li>
+										Designed and created a Tinder-style Android app to
+										intelligently pair users with movie trailers
+									</li>
+									<li>
+										Pitched app to executive teams at Disney, Warner Bros, and
+										Lionsgate following expressed interest
+									</li>
+									<li>
+										Co-led UI team with specialization in Kotlin, Android
+										Studio, and graphic design
+									</li>
+								</ul>
+								<h3><em>Code unavailable to maintain confidentiality.</em></h3>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Item 2: Library Scan -->
+				<div class="portfolio_item">
+					<div class="hover_overlay">
+						<p>Chrome Extension</p>
+						<h2><strong>Library Scan</strong></h2>
+					</div>
+					<img src="assets/LibraryScan.png" alt="Library Scan" />
+					<div class="portfolio_popup" style="display: none">
+						<div class="portfolio_popup_content">
+							<button class="fa fa-close"></button>
+							<div class="portfolio_popup_image">
+								<img src="assets/LibraryScan.png" alt="Library Scan" />
+							</div>
+							<div class="portfolio_popup_description">
+								<p>Chrome Extension</p>
+								<h2><strong>Library Scan</strong></h2>
+								<p>
+									<a
+										href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+									>
+										<img
+											src="https://img.shields.io/chrome-web-store/v/mfckggnkebdpaocogfekaaicafooeiik"
+											alt="Chrome Web Store"
+										/>
+									</a>
+									<a
+										href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+									>
+										<img
+											src="https://img.shields.io/badge/books%20scanned-33.4k%2B-blue"
+											alt="Books Scanned"
+										/>
+									</a>
+									<a
+										href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+									>
+										<img
+											src="https://img.shields.io/badge/books%20found-29.0k%2B-blue"
+											alt="Books Found"
+										/>
+									</a>
+									<a
+										href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+									>
+										<img
+											src="https://img.shields.io/chrome-web-store/users/mfckggnkebdpaocogfekaaicafooeiik?color=blue"
+											alt="Users"
+										/>
+									</a>
+									<a
+										href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+									>
+										<img
+											src="https://img.shields.io/chrome-web-store/stars/mfckggnkebdpaocogfekaaicafooeiik"
+											alt="Rating"
+										/>
+									</a>
+								</p>
+
+								<ul>
+									<li>
+										Scans any OverDrive library for available eBooks &
+										audiobooks from a Goodreads to-read shelf
+									</li>
+									<li>1k+ books scanned daily</li>
+								</ul>
+								<div class="links">
+									<a
+										href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik"
+										target="_blank"
+										rel="noopener"
+									>
+										<img
+											src="https://github.com/isaactbock/library-scan/blob/master/media/Chrome%20Web%20Store.png?raw=true"
+											height="75"
+											alt="Available in the Chrome Web Store"
+										/>
+									</a>
+									<a
+										href="https://github.com/isaactbock/library-scan"
+										class="fa fa-github fa-5x"
+									></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Item 3: Body Language Blueprints -->
+				<div class="portfolio_item">
+					<div class="hover_overlay">
+						<p>Oshkosh, WI</p>
+						<h2><strong>Body Language Blueprints</strong></h2>
+					</div>
+					<img src="assets/NYC_Covid.png" alt="NYC COVID-19 Metro Risks" />
+					<div class="portfolio_popup" style="display: none">
+						<div class="portfolio_popup_content">
+							<button class="fa fa-close"></button>
+							<div class="portfolio_popup_image">
+								<img
+									src="assets/NYC_Covid.png"
+									alt="NYC COVID-19 Metro Risks"
+								/>
+							</div>
+							<div class="portfolio_popup_description">
+								<p>Oshkosh, WI</p>
+								<h2><strong>Body Language Blueprints</strong></h2>
+								<ul>
+									<li>Digitized all courses for online purchase</li>
+									<li>
+										A/B redesign testing yielded XXX% increase in weekly users
+									</li>
+								</ul>
+								<h3>
+									<em>
+										bodylanguageblueprints.com |
+										courses.bodylanguageblueprints.com
+									</em>
+								</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- jQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<!-- GSAP / ScrollTrigger -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/gsap.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.4.0/ScrollTrigger.js"></script>
+		<!-- 3D Objects -->
+		<script src="https://unpkg.com/three@0.117.1/build/three.min.js"></script>
+		<script src="https://unpkg.com/three@0.117.1/examples/js/loaders/OBJLoader.js"></script>
+		<!-- Mailgo Email Linking -->
+		<script src="https://cdn.jsdelivr.net/npm/mailgo@0.9.7/dist/mailgo.min.js"></script>
+		<!-- JS -->
+		<script src="js/portfolio.js"></script>
+		<script src="js/scroll.js"></script>
+		<!-- Chatbot -->
+		<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+		<df-messenger
+			intent="WELCOME"
+			chat-title="AI-saac"
+			agent-id="912ba2fa-c89d-4002-b29a-8f25a9a2e530"
+			language-code="en"
+			wait-open="true"
+		></df-messenger>
+	</body>
 </html>
