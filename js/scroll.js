@@ -2,7 +2,7 @@ $(document).ready(function () {
 	// autoscroll down after intro video completion
 	$("#intro_video").on("ended", function () {
 		setTimeout(function () {
-			scrollIntoViewCustom("header");
+			scrollIntoViewCustom("header", 725);
 		}, 250);
 	});
 
@@ -10,11 +10,13 @@ $(document).ready(function () {
 	$("#to_about").click(() => scrollIntoViewCustom("header"));
 	$("#to_skills").click(() => scrollIntoViewCustom("skills"));
 	$("#down").click(() => scrollIntoViewCustom("skills"));
-	$("#to_portfolio").click(() => scrollIntoViewCustom("featured_projects"));
+	$("#to_portfolio").click(() =>
+		scrollIntoViewCustom("featured_projects", 3000)
+	);
 });
 
 // mobile-accessible smooth scroll via Ricardo Rocha (https://stackoverflow.com/a/57676300)
-function scrollIntoViewCustom(id) {
+function scrollIntoViewCustom(id, duration = 1000) {
 	let element = document.getElementById(id);
 	if (element == undefined) {
 		return;
@@ -45,7 +47,7 @@ function scrollIntoViewCustom(id) {
 			start = timestamp || new Date().getTime();
 		} //get id of animation
 		var elapsed = timestamp - start;
-		var progress = elapsed / 600; // animation duration 600ms
+		var progress = elapsed / duration; // animation duration
 		//ease in function from https://github.com/component/ease/blob/master/index.js
 		var outQuad = function outQuad(n) {
 			return n * (2 - n);
