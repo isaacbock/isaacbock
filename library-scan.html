@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Page design inspired by https://markd.ltd/products/battle-tabs -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent Search Engine Indexing -->
+    <meta name="robots" content="noindex">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-172825265-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-172825265-1');
+    </script>
+    <!-- Hotjar -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:1946757,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Favicon -->
+    <link rel='shortcut icon' type='image/x-icon' href='assets/favicon.ico'/>
+    <!-- Metadata -->
+	<meta property="og:title" content="Library Scan: Goodreads + OverDrive">
+	<meta property="og:description" content="Scan any OverDrive library for available eBooks & audiobooks from your Goodreads to-read shelf. Find titles immediately available for checkout, place holds on upcoming books, filter by media type & availability, and automatically re-scan daily.">
+	<meta property="og:image" content="https://raw.githubusercontent.com/isaacbock/isaacbock/master/assets/LibraryScanPromo.jpg">
+	<meta property="og:url" content="https://isaacbock.com/library-scan">
+    <!-- Styling -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/libraryScan.css">
+    <title>Library Scan</title>
+</head>
+<body>
+    <div id="header" >
+        <a href="/" id="logo">&lt; ISAAC B.</a>
+        <div id="menu">
+            <a href="#start" id="start_nav_link" style="display: none;">🚀 Get Started</a>
+            <a href="#faq">🙋 FAQ</a>
+            <a href="#mailgo" data-address="isaactbock" data-domain="wustl.edu" id="contact">👋 Contact</a>
+        </div>
+    </div>
+    <div id="banner" class="grey">
+        <div id="text">
+            <div>
+                <img src="assets/LibraryScanLogo.png" alt="Library Scan Logo" id="library_scan_logo">
+                <div>
+                    <h2>Goodreads + OverDrive:</h2>
+                    <h1>Library Scan</h1>
+                </div>
+            </div>
+            <p>Scan any OverDrive library for available eBooks & audiobooks from your Goodreads to-read shelf. Find titles immediately available for checkout, place holds on upcoming books, filter by media type & availability, and automatically re-scan daily.</p>
+            <a href="https://chrome.google.com/webstore/detail/mfckggnkebdpaocogfekaaicafooeiik" id="download">Add to Chrome</a>
+            <div id="already-downloaded" style="display: none;">
+                <i class="fa fa-check-circle"></i>
+                <h3>Already downloaded.</h3>
+                <a href="#start">Let's get started!</a>
+            </div>
+        </div>
+        <img src="assets/LibraryScanScreenshot.png" alt="Library Scan Screenshot" id="screenshot">
+    </div>
+    <div id="content" class="grey">
+        <div id="changelog" class="anchor">
+            <h1>What's new? 📦</h1>
+            <div>
+                <div>
+                    <h2>Version 1.0.2 <span class="date">(05/22/21)</span></h2>
+                    <ul><li>Improved book matching algorithm</li></ul>
+                    <ul><li>Improved setup instructions & resources</li></ul>
+                    <ul><li>Enhanced versioning analytics</li></ul>
+                    <ul><li>Bug fix: accurate badge counts</li></ul>
+                    <ul><li>Bug fix: limit auto refreshing after errors</li></ul>
+                </div>
+                <div>
+                    <h2>Version 1.0.1 <span class="date">(07/26/20)</span></h2>
+                    <ul><li>Improved analytics</li></ul>
+                </div>
+                <div>
+                    <h2>Version 1.0.0 <span class="date">(07/25/20)</span></h2>
+                    <ul><li>Initial release</li></ul>
+                </div>
+            </div>
+        </div>
+        <div id="start" class="anchor" style="display: none;">
+            <h1>Getting Started 🚀</h1>
+            <h2 class="completed">1. Download Library Scan</h2>
+            <h2>2. Pin to Bookmarks Bar for Easy Access</h2>
+            <img src="assets/Pin%20Extension.gif" alt="Pin Extension" class="instructionImage">
+            <h2 id="goodreads" class="anchor">3. Connect Your Goodreads Account</h2>
+            <p>Navigate to your Goodreads profile page. The number listed within the page URL is your ID number—enter it into Library Scan to connect your Goodreads account.</p>
+            <p><em>ex) https://www.goodreads.com/user/show/<strong>12345678</strong>-isaac</em></p>
+            <p>Your account must also be public, a setting which can be modified <a href="https://www.goodreads.com/user/edit?tab=settings" target="_blank">here</a>.</p>
+            <h2 id="overdrive" class="anchor">4. Connect Your OverDrive Library</h2>
+            <p>Please enter the entire URL of your OverDrive library. For example, the New York Public Library can be found at https://nypl.overdrive.com.</p>
+            <p>Unsure? You can search for your local library <a href="https://www.overdrive.com/libraries" target="_blank">here</a>.</p>
+            <h2>5. Start Scanning!</h2>
+            <p>Toggle any eBooks and/or audiobooks preferences and <em>Submit</em> to start scanning!</p>
+        </div>
+        <div id="faq" class="anchor">
+            <h1>FAQ 🙋</h1>
+            <h2>Can I connect multiple OverDrive libraries?</h2>
+            <p>Right now, Library Scan only supports one OverDrive library at a time.</p>
+            <h2>Does my Goodreads profile need to be public?</h2>
+            <p>Yes—your account must be publicly viewable so Library Scan can see the books you've shelved. You can make this privacy change <a href="https://www.goodreads.com/user/edit?tab=settings" target="_blank">here</a> by setting "<em>Who Can View My Profile</em>" to "<em>anyone (including search engines)</em>".</p>
+            <p>If you would like to keep a Goodreads profile private, you can always revert these privacy changes immediately after searching with Library Scan. However, please be aware that automatic daily scans will stop working once a profile becomes private.</p>
+        </div>
+        <!-- <div id="contact" class="anchor">
+            <h1>Get in Touch ✉️</h1>
+            <h2>Question? / Email</h2>
+            <h2>Feature Request</h2>
+            <h2>Leave a Review</h2>
+        </div> -->
+    </div>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <!-- Mailgo Email Linking -->
+    <script src="https://cdn.jsdelivr.net/npm/mailgo@0.9.7/dist/mailgo.min.js"></script>
+    <!-- JS -->
+    <script src="js/libraryScan.js"></script>
+</body>
+</html>

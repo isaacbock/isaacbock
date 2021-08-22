@@ -149,6 +149,9 @@ class Scene {
 		this.modelGroup.add(model);
 		this.modelGroup.add(line);
 		this.scene.add(this.modelGroup);
+
+		this.render = this.render.bind(this);
+		this.onResize = this.onResize.bind(this);
 	}
 
 	render = () => {
