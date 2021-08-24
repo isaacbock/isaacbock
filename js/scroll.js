@@ -2,8 +2,8 @@ $(document).ready(function () {
 	// autoscroll down after intro video completion
 	$("#intro_video").on("ended", function () {
 		setTimeout(function () {
-			scrollIntoViewCustom("header", 725);
-		}, 250);
+			scrollIntoViewCustom("header");
+		}, 400);
 	});
 
 	// header bar navigation w/ smooth scroll
@@ -11,7 +11,7 @@ $(document).ready(function () {
 	$("#to_skills").click(() => scrollIntoViewCustom("skills"));
 	$("#down").click(() => scrollIntoViewCustom("skills"));
 	$("#to_portfolio").click(() =>
-		scrollIntoViewCustom("featured_projects", 3000)
+		scrollIntoViewCustom("featured_projects", 2000)
 	);
 });
 
@@ -239,7 +239,7 @@ function setupAnimation(model) {
 
 	scene.render();
 
-	var sectionDuration = 0.9;
+	var sectionDuration = 0.75;
 
 	// wireframe to solid
 	gsap.fromTo(
@@ -271,7 +271,7 @@ function setupAnimation(model) {
 
 	let delay = 0;
 
-	tl.to("canvas", { duration: 1, x: "0", autoAlpha: 1 }, delay);
+	tl.to("canvas", { duration: 0.75, x: "0", autoAlpha: 1 }, delay);
 	tl.to(brain.position, { duration: 1, x: 15, z: 140, ease: "none" }, delay);
 
 	delay += 0.5 * sectionDuration;
@@ -328,18 +328,18 @@ function setupAnimation(model) {
 		})
 		.from(
 			"#phone_bubble_1",
-			{ x: 30, opacity: 0, ease: "back", duration: 0.75 },
-			"-=.5"
+			{ x: 30, opacity: 0, ease: "back", duration: 1 },
+			"+=.5"
 		)
 		.from(
 			"#phone_bubble_2",
-			{ x: 30, opacity: 0, ease: "back", duration: 0.75 },
-			"-=.5"
+			{ x: 30, opacity: 0, ease: "back", duration: 1 },
+			"-=.75"
 		)
 		.from(
 			"#phone_bubble_3",
-			{ x: 30, opacity: 0, ease: "back", duration: 0.75 },
-			"-=.5"
+			{ x: 30, opacity: 0, ease: "back", duration: 1 },
+			"-=.75"
 		);
 
 	// slide phone to left edge
@@ -369,38 +369,30 @@ function setupAnimation(model) {
 		.from("#created_for_heading", { opacity: 0, x: 100, duration: 0.5 }, ">")
 		.from(
 			"#created_for_invisibly",
-			{ opacity: 0, scale: 0.8, x: 50, duration: 0.5 },
-			">"
+			{ opacity: 0, x: 75, duration: 0.75 },
+			"-=.5"
 		)
-		.from(
-			"#created_for_blb",
-			{ opacity: 0, scale: 0.8, x: 50, duration: 0.5 },
-			"-=.3"
-		)
-		.from(
-			"#created_for_chrome",
-			{ opacity: 0, scale: 0.8, x: 50, duration: 0.5 },
-			"-=.3"
-		)
+		.from("#created_for_blb", { opacity: 0, x: 75, duration: 0.75 }, "-=.75")
+		.from("#created_for_chrome", { opacity: 0, x: 75, duration: 0.75 }, "-=.75")
 		.from(
 			"#presented_to_heading",
 			{ opacity: 0, x: 100, duration: 0.5 },
-			"-=.8"
+			"-=0.75"
 		)
 		.from(
 			"#presented_to_disney",
-			{ opacity: 0, scale: 0.8, x: 50, duration: 0.5 },
-			"-=.3"
+			{ opacity: 0, x: 75, duration: 0.75 },
+			"-=.75"
 		)
 		.from(
 			"#presented_to_warner",
-			{ opacity: 0, scale: 0.8, x: 50, duration: 0.5 },
-			"-=.3"
+			{ opacity: 0, x: 75, duration: 0.75 },
+			"-=.75"
 		)
 		.from(
 			"#presented_to_lionsgate",
-			{ opacity: 0, scale: 0.8, x: 50, duration: 0.5 },
-			"-=.3"
+			{ opacity: 0, x: 75, duration: 0.75 },
+			"-=.75"
 		);
 }
 
