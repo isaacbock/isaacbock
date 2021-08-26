@@ -323,13 +323,13 @@ function setupAnimation(model) {
 				trigger: "#phone_container",
 				start: "top 25%",
 				end: "top top",
-				toggleActions: "restart none none reset",
+				toggleActions: "restart none none reverse",
 			},
 		})
 		.from(
 			"#phone_bubble_1",
 			{ x: 30, opacity: 0, ease: "back", duration: 1 },
-			"+=.5"
+			"+=.4"
 		)
 		.from(
 			"#phone_bubble_2",
