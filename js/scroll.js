@@ -312,7 +312,7 @@ function setupAnimation(model) {
 			trigger: "#phone_container",
 			start: "top 25%",
 			end: "top 10%",
-			toggleActions: "restart none none reset",
+			toggleActions: "restart none none reverse",
 		},
 	});
 
