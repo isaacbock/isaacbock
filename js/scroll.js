@@ -348,7 +348,7 @@ function setupAnimation(model) {
 			scrollTrigger: {
 				trigger: "#phone_container",
 				start: "bottom bottom",
-				end: "bottom 70%",
+				end: "bottom 50%",
 				pin: true,
 				scrub: true,
 				toggleActions: "restart none none reset",

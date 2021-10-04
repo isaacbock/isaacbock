@@ -17,13 +17,13 @@ body {
 h1 {
 	/* Section Titles */
 	font-weight: 600;
-	font-size: 50px;
+	font-size: 45px;
 	margin-bottom: 5px;
 }
 h2 {
 	/* Project Titles */
-	font-weight: 500;
-	font-size: 35px;
+	font-weight: 400;
+	font-size: 33px;
 	margin-bottom: 0;
 	margin-top: 0;
 }
@@ -44,7 +44,7 @@ h4 {
 h5 {
 	/* Stylized Subtitle */
 	font-size: 15px;
-	font-weight: 400;
+	font-weight: 500;
 	color: #02a9f7;
 	margin-bottom: 8px;
 	margin-top: 0;
@@ -118,6 +118,10 @@ li {
 	margin-left: 15px;
 	text-decoration: none;
 	color: black;
+	transition: all 0.3s;
+}
+#header > a:hover {
+	color: #0096db;
 }
 #bio {
 	flex-grow: 1;
@@ -135,7 +139,7 @@ li {
 }
 #headshot {
 	border-radius: 50px;
-	width: 160px;
+	width: 150px;
 	height: auto;
 	transition: all 0.3s;
 }
@@ -156,7 +160,7 @@ li {
 	text-align: center;
 	cursor: pointer;
 	align-self: center;
-	margin-bottom: 30px;
+	margin-bottom: 75px;
 	animation: float 3s ease-in-out infinite;
 }
 .fa {
@@ -335,7 +339,7 @@ canvas {
 	padding: 25px;
 	opacity: 0;
 	transition: 0.4s;
-	background-color: #007cb5ec;
+	background-color: #0099e0dc;
 	border-radius: 50px;
 	color: white;
 	z-index: 97;
