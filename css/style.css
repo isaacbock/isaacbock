@@ -19,6 +19,7 @@ h1 {
 	font-weight: 600;
 	font-size: 45px;
 	margin-bottom: 5px;
+	margin-top: 20px;
 }
 h2 {
 	/* Project Titles */
@@ -138,8 +139,8 @@ li {
 	text-align: center;
 }
 #headshot {
-	border-radius: 50px;
-	width: 150px;
+	border-radius: 30px;
+	width: 130px;
 	height: auto;
 	transition: all 0.3s;
 }
