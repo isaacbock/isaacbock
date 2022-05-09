@@ -140,7 +140,8 @@ li {
 }
 #headshot {
 	border-radius: 30px;
-	width: 130px;
+	width: 300px;
+	max-width: 95%;
 	height: auto;
 	transition: all 0.3s;
 }
