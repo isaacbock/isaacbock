@@ -18,6 +18,8 @@
 	<link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico" />
 	<!-- Tailwind CSS -->
 	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- Flip Board CSS -->
+	<link rel="stylesheet" href="css/flipboard.css" />
 	<!-- Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900"
 		rel="stylesheet" />
@@ -39,11 +41,13 @@
 		Your browser does not support videos.
 	</video>
 
-	<!-- Empty section for future content -->
-	<div id="main_content" class="min-h-screen flex items-center justify-center text-2xl text-gray-500"
+	<div id="main_content" class="min-h-screen flex items-center justify-center p-4"
 		style="background: linear-gradient(180deg, #fbfbfb 0%, white 50%);">
-		<div class="text-center">
-			Coming Soon...
+		<div class="text-center max-w-6xl w-full">
+			<!-- Flip Board Component -->
+			<div id="flipBoard" class="flip-board">
+				<div id="flipDisplay"></div>
+			</div>
 		</div>
 	</div>
 
