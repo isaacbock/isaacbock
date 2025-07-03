@@ -157,11 +157,11 @@
 }
 
 .flip-card.standard.flipping .flip-card-top-flip {
-	animation: flipDownFast 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	animation: flipDownFast 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .flip-card.standard.flipping .flip-card-bottom-flip {
-	animation: flipUpFast 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	animation: flipUpFast 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 @keyframes flipDown {
@@ -252,27 +252,25 @@
 /* Mobile Responsive Scaling */
 @media (max-width: 768px) {
 	.flip-board {
-		padding: 12px 20px;
-		transform: perspective(800px) rotateX(2deg) rotateY(3deg) scale(0.9);
+		transform: perspective(1000px) rotateX(2deg) rotateY(-1deg);
+		padding: 18px 28px;
 	}
 
 	.flip-card {
-		height: 40px;
-		font-size: 15px;
+		height: 42px;
+		font-size: 16px;
 	}
 
 	.flip-card.standard {
-		min-width: 28px;
-		width: 28px;
+		width: 20px;
 	}
 
 	.flip-card.wide {
-		min-width: 120px;
-		width: 120px;
+		width: 84px;
 	}
 
 	.flip-card-text {
-		font-size: 15px;
+		font-size: 16px;
 	}
 
 	.flip-card-text.top {
