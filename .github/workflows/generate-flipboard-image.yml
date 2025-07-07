@@ -42,78 +42,102 @@ jobs:
           const fs = require('fs');
           const path = require('path');
 
+          // Helper function to wait for a specified time
+          const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
           (async () => {
-            const browser = await puppeteer.launch({
-              headless: true,
-              args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--no-first-run',
-                '--no-zygote',
-                '--disable-gpu'
-              ]
-            });
-            
-            const page = await browser.newPage();
-            
-            // Set viewport to ensure consistent rendering
-            await page.setViewport({
-              width: 1200,
-              height: 800,
-              deviceScaleFactor: 2
-            });
-            
-            // Navigate to the local HTML file
-            const htmlPath = path.resolve('./index.html');
-            await page.goto(`file://${htmlPath}`, { 
-              waitUntil: 'networkidle0',
-              timeout: 30000 
-            });
-            
-            // Wait for the video to finish and main content to be visible
-            await page.waitForSelector('#main_content', { timeout: 30000 });
-            
-            // Skip the video by scrolling to main content immediately
-            await page.evaluate(() => {
-              const mainContent = document.getElementById('main_content');
-              if (mainContent) {
-                mainContent.scrollIntoView({ behavior: 'instant' });
+            let browser;
+            try {
+              browser = await puppeteer.launch({
+                headless: 'new',
+                args: [
+                  '--no-sandbox',
+                  '--disable-setuid-sandbox',
+                  '--disable-dev-shm-usage',
+                  '--disable-accelerated-2d-canvas',
+                  '--no-first-run',
+                  '--no-zygote',
+                  '--disable-gpu',
+                  '--disable-web-security',
+                  '--disable-features=VizDisplayCompositor'
+                ]
+              });
+              
+              const page = await browser.newPage();
+              
+              // Set viewport to ensure consistent rendering
+              await page.setViewport({
+                width: 1200,
+                height: 800,
+                deviceScaleFactor: 2
+              });
+              
+              // Navigate to the local HTML file
+              const htmlPath = path.resolve('./index.html');
+              console.log('Loading page:', htmlPath);
+              
+              await page.goto(`file://${htmlPath}`, { 
+                waitUntil: 'networkidle0',
+                timeout: 30000 
+              });
+              
+              console.log('Page loaded, waiting for main content...');
+              
+              // Wait for the video to finish and main content to be visible
+              await page.waitForSelector('#main_content', { timeout: 30000 });
+              
+              // Skip the video by scrolling to main content immediately
+              await page.evaluate(() => {
+                const mainContent = document.getElementById('main_content');
+                if (mainContent) {
+                  mainContent.scrollIntoView({ behavior: 'instant' });
+                }
+              });
+              
+              console.log('Waiting for flip board...');
+              
+              // Wait for the flip board to be initialized
+              await page.waitForSelector('#flipDisplay', { timeout: 30000 });
+              
+              console.log('Flip board found, waiting for data and animations...');
+              
+              // Wait for data to load and animations to complete
+              // The flip board starts animating after 2.5 seconds, so we wait longer
+              await wait(10000);
+              
+              // Ensure all animations are complete by checking for flipping class
+              await page.waitForFunction(() => {
+                const flippingCards = document.querySelectorAll('.flip-card.flipping');
+                return flippingCards.length === 0;
+              }, { timeout: 10000 });
+              
+              console.log('Animations complete, taking screenshot...');
+              
+              // Get the flip board element
+              const flipBoard = await page.$('#flipBoard');
+              
+              if (!flipBoard) {
+                throw new Error('Flip board element not found');
               }
-            });
-            
-            // Wait for the flip board to be initialized
-            await page.waitForSelector('#flipDisplay', { timeout: 30000 });
-            
-            // Wait for data to load and animations to complete
-            // The flip board starts animating after 2.5 seconds, so we wait longer
-            await page.waitForTimeout(8000);
-            
-            // Ensure all animations are complete by checking for flipping class
-            await page.waitForFunction(() => {
-              const flippingCards = document.querySelectorAll('.flip-card.flipping');
-              return flippingCards.length === 0;
-            }, { timeout: 10000 });
-            
-            // Get the flip board element
-            const flipBoard = await page.$('#flipBoard');
-            
-            if (!flipBoard) {
-              throw new Error('Flip board element not found');
+              
+              // Take screenshot of just the flip board
+              const screenshot = await flipBoard.screenshot({
+                type: 'png',
+                omitBackground: false
+              });
+              
+              // Save the screenshot directly to the final location
+              fs.writeFileSync('flipboard.png', screenshot);
+              console.log('Screenshot saved as flipboard.png');
+              
+            } catch (error) {
+              console.error('Error during screenshot process:', error);
+              throw error;
+            } finally {
+              if (browser) {
+                await browser.close();
+              }
             }
-            
-            // Take screenshot of just the flip board
-            const screenshot = await flipBoard.screenshot({
-              type: 'png',
-              omitBackground: false
-            });
-            
-            // Save the screenshot directly to the final location
-            fs.writeFileSync('flipboard.png', screenshot);
-            console.log('Screenshot saved as flipboard.png');
-            
-            await browser.close();
           })();
           EOF
 
