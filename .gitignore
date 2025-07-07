@@ -1,2 +1,11 @@
 
 .DS_Store
+
+# Node.js dependencies and files (for GitHub Action)
+node_modules/
+package.json
+package-lock.json
+screenshot.js
+
+# Temporary files
+*.tmp

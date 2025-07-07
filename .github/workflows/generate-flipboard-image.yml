@@ -1,0 +1,144 @@
+name: Generate Flip Board Image
+
+on:
+  schedule:
+    # Run every 4 hours
+    - cron: "0 */4 * * *"
+  workflow_dispatch: # Allow manual trigger
+  push:
+    branches: [main]
+    paths:
+      - "js/app.js"
+      - "css/flipboard.css"
+      - "index.html"
+
+jobs:
+  generate-image:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install puppeteer
+
+      - name: Create screenshot script
+        run: |
+          cat > screenshot.js << 'EOF'
+          const puppeteer = require('puppeteer');
+          const fs = require('fs');
+          const path = require('path');
+
+          (async () => {
+            const browser = await puppeteer.launch({
+              headless: true,
+              args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-first-run',
+                '--no-zygote',
+                '--disable-gpu'
+              ]
+            });
+            
+            const page = await browser.newPage();
+            
+            // Set viewport to ensure consistent rendering
+            await page.setViewport({
+              width: 1200,
+              height: 800,
+              deviceScaleFactor: 2
+            });
+            
+            // Navigate to the local HTML file
+            const htmlPath = path.resolve('./index.html');
+            await page.goto(`file://${htmlPath}`, { 
+              waitUntil: 'networkidle0',
+              timeout: 30000 
+            });
+            
+            // Wait for the video to finish and main content to be visible
+            await page.waitForSelector('#main_content', { timeout: 30000 });
+            
+            // Skip the video by scrolling to main content immediately
+            await page.evaluate(() => {
+              const mainContent = document.getElementById('main_content');
+              if (mainContent) {
+                mainContent.scrollIntoView({ behavior: 'instant' });
+              }
+            });
+            
+            // Wait for the flip board to be initialized
+            await page.waitForSelector('#flipDisplay', { timeout: 30000 });
+            
+            // Wait for data to load and animations to complete
+            // The flip board starts animating after 2.5 seconds, so we wait longer
+            await page.waitForTimeout(8000);
+            
+            // Ensure all animations are complete by checking for flipping class
+            await page.waitForFunction(() => {
+              const flippingCards = document.querySelectorAll('.flip-card.flipping');
+              return flippingCards.length === 0;
+            }, { timeout: 10000 });
+            
+            // Get the flip board element
+            const flipBoard = await page.$('#flipBoard');
+            
+            if (!flipBoard) {
+              throw new Error('Flip board element not found');
+            }
+            
+            // Take screenshot of just the flip board
+            const screenshot = await flipBoard.screenshot({
+              type: 'png',
+              omitBackground: false
+            });
+            
+            // Save the screenshot directly to the final location
+            fs.writeFileSync('flipboard.png', screenshot);
+            console.log('Screenshot saved as flipboard.png');
+            
+            await browser.close();
+          })();
+          EOF
+
+      - name: Generate screenshot
+        run: node screenshot.js
+
+      - name: Check if image was generated
+        run: |
+          if [ ! -f "flipboard.png" ]; then
+            echo "Error: Screenshot was not generated"
+            exit 1
+          fi
+          echo "Screenshot generated successfully"
+          ls -la flipboard.png
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add flipboard.png
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update flip board snapshot - $(date -u)"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
