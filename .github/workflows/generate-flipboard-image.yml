@@ -65,11 +65,11 @@ jobs:
               
               const page = await browser.newPage();
               
-              // Set viewport to ensure consistent rendering
+              // Set viewport to portrait dimensions (1236×1648)
               await page.setViewport({
-                width: 1200,
-                height: 800,
-                deviceScaleFactor: 2
+                width: 1236,
+                height: 1648,
+                deviceScaleFactor: 1
               });
               
               // Navigate to the local HTML file
@@ -113,22 +113,21 @@ jobs:
               
               console.log('Animations complete, taking screenshot...');
               
-              // Get the flip board element
-              const flipBoard = await page.$('#flipBoard');
-              
-              if (!flipBoard) {
-                throw new Error('Flip board element not found');
-              }
-              
-              // Take screenshot of just the flip board
-              const screenshot = await flipBoard.screenshot({
+              // Take a full page screenshot with the flip board centered
+              const screenshot = await page.screenshot({
                 type: 'png',
-                omitBackground: false
+                fullPage: false,
+                clip: {
+                  x: 0,
+                  y: 0,
+                  width: 1236,
+                  height: 1648
+                }
               });
               
               // Save the screenshot directly to the final location
               fs.writeFileSync('flipboard.png', screenshot);
-              console.log('Screenshot saved as flipboard.png');
+              console.log('Screenshot saved as flipboard.png (1236×1648)');
               
             } catch (error) {
               console.error('Error during screenshot process:', error);
