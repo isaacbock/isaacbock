@@ -1,9 +1,9 @@
 name: Generate Flip Board Image
 
 on:
-  schedule:
+  # schedule:
     # Run every 4 hours
-    - cron: "0 */4 * * *"
+    # - cron: "0 */4 * * *"
   workflow_dispatch: # Allow manual trigger
   push:
     branches: [main]
