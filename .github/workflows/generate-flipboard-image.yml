@@ -33,12 +33,13 @@ jobs:
       - name: Install dependencies
         run: |
           npm init -y
-          npm install puppeteer
+          npm install puppeteer sharp
 
       - name: Create screenshot script
         run: |
           cat > screenshot.js << 'EOF'
           const puppeteer = require('puppeteer');
+          const sharp = require('sharp');
           const fs = require('fs');
           const path = require('path');
 
@@ -83,37 +84,54 @@ jobs:
               
               console.log('Page loaded, waiting for main content...');
               
-              // Wait for the video to finish and main content to be visible
+              // Wait for the video element to be present
+              await page.waitForSelector('#intro_video', { timeout: 30000 });
+              
+              // Wait for main content to be visible
               await page.waitForSelector('#main_content', { timeout: 30000 });
               
-              // Skip the video by scrolling to main content immediately
+              // Force scroll to main content and hide video
               await page.evaluate(() => {
+                // Hide the video completely
+                const video = document.getElementById('intro_video');
+                if (video) {
+                  video.style.display = 'none';
+                }
+                
+                // Ensure main content is visible and positioned correctly
                 const mainContent = document.getElementById('main_content');
                 if (mainContent) {
                   mainContent.scrollIntoView({ behavior: 'instant' });
+                  // Make sure it's at the top of the viewport
+                  window.scrollTo(0, mainContent.offsetTop);
                 }
               });
               
-              console.log('Waiting for flip board...');
+              console.log('Video hidden, waiting for flip board...');
               
               // Wait for the flip board to be initialized
               await page.waitForSelector('#flipDisplay', { timeout: 30000 });
               
+              // Wait for flip board content to be populated
+              await page.waitForFunction(() => {
+                const flipDisplay = document.getElementById('flipDisplay');
+                return flipDisplay && flipDisplay.children.length > 0;
+              }, { timeout: 30000 });
+              
               console.log('Flip board found, waiting for data and animations...');
               
-              // Wait for data to load and animations to complete
-              // The flip board starts animating after 2.5 seconds, so we wait longer
-              await wait(10000);
+              // Wait longer for data to load and animations to complete
+              await wait(12000);
               
               // Ensure all animations are complete by checking for flipping class
               await page.waitForFunction(() => {
                 const flippingCards = document.querySelectorAll('.flip-card.flipping');
                 return flippingCards.length === 0;
-              }, { timeout: 10000 });
+              }, { timeout: 15000 });
               
               console.log('Animations complete, taking screenshot...');
               
-              // Take a full page screenshot with the flip board centered
+              // Take a full page screenshot
               const screenshot = await page.screenshot({
                 type: 'png',
                 fullPage: false,
@@ -125,9 +143,25 @@ jobs:
                 }
               });
               
-              // Save the screenshot directly to the final location
-              fs.writeFileSync('flipboard.png', screenshot);
-              console.log('Screenshot saved as flipboard.png (1236×1648)');
+              console.log('Screenshot captured, optimizing for Kindle...');
+              
+              // Process image for Kindle Paperwhite optimization
+              await sharp(screenshot)
+                .greyscale()
+                .gamma(1.2)  // Adjust gamma for better Kindle contrast
+                .modulate({
+                  brightness: 1.1,  // Slightly brighter
+                  contrast: 1.3     // Higher contrast for e-ink display
+                })
+                .sharpen()  // Sharpen for better text clarity
+                .png({
+                  quality: 100,
+                  compressionLevel: 6,
+                  adaptiveFiltering: true
+                })
+                .toFile('flipboard.png');
+              
+              console.log('Screenshot saved as flipboard.png (1236×1648, Kindle optimized)');
               
             } catch (error) {
               console.error('Error during screenshot process:', error);
