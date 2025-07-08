@@ -1,9 +1,9 @@
 name: Generate Flip Board Image
 
 on:
-  # schedule:
+  schedule:
     # Run every 4 hours
-    # - cron: "0 */4 * * *"
+    - cron: "0 */4 * * *"
   workflow_dispatch: # Allow manual trigger
   push:
     branches: [main]
@@ -104,6 +104,12 @@ jobs:
                   mainContent.scrollIntoView({ behavior: 'instant' });
                   // Make sure it's at the top of the viewport
                   window.scrollTo(0, mainContent.offsetTop);
+                }
+                
+                // Scale up the flip board for better visibility
+                const flipBoard = document.querySelector('.flip-board');
+                if (flipBoard) {
+                  flipBoard.style.transform = 'perspective(1000px) rotateX(2deg) rotateY(3deg) scale(1.4)';
                 }
               });
               
