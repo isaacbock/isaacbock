@@ -154,10 +154,10 @@ jobs:
               // Process image for Kindle Paperwhite optimization
               await sharp(screenshot)
                 .greyscale()
-                .gamma(0.85)  // Moderate brightening to compensate for greyscale darkening
+                .gamma(1.0)
                 .modulate({
-                  brightness: 1.25,  // Moderate brightness increase to restore white backgrounds
-                  contrast: 1.05     // Slight contrast boost for better text readability
+                  brightness: 1.3,  // Increase brightness to compensate for greyscale darkening
+                  contrast: 1.1     // Slight contrast boost for better text readability
                 })
                 .sharpen()  // Sharpen for better text clarity
                 .png({
