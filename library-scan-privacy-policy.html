@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <!-- Favicon -->
+    <link rel='shortcut icon' type='image/x-icon' href='assets/favicon.ico' />
+    <!-- Metadata -->
+    <meta property="og:title" content="Library Scan: Privacy Policy">
+    <meta property="og:description" content="Privacy policy for the Library Scan Chrome extension.">
+    <meta property="og:url" content="https://isaacbock.com/library-scan-privacy-policy">
+    <!-- Styling -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/libraryScan.css">
+    <title>Library Scan — Privacy Policy</title>
+</head>
+
+<body>
+    <div id="header">
+        <a href="/" id="logo"></a>
+        <div id="menu">
+            <a href="/library-scan">Library Scan</a>
+            <a href="#mailgo" data-address="isaacbock" data-domain="gmail.com" id="contact">Contact</a>
+        </div>
+    </div>
+    <div id="content" class="grey" style="padding-top: 100px;">
+        <div>
+            <h1>Privacy Policy</h1>
+            <p><strong>Library Scan: OverDrive (Libby) + Goodreads</strong><br>
+            Last updated: April 1, 2026</p>
+
+            <h2>What Data is Collected</h2>
+            <p>Library Scan collects the following data, all of which is stored locally on your device:</p>
+            <ul>
+                <li>Your Goodreads user ID (numeric, entered by you)</li>
+                <li>Your OverDrive library URLs (entered by you)</li>
+                <li>Your selected Goodreads shelves and filter preferences</li>
+                <li>Book titles and availability results from scans</li>
+                <li>Your Library Scan Pro purchase status</li>
+            </ul>
+            <p>This data is stored in Chrome's local storage and never leaves your device except as described below.</p>
+
+            <h2>Analytics</h2>
+            <p>Library Scan uses Google Analytics 4 (via the Measurement Protocol) to collect anonymous usage statistics
+                that help improve the extension. The following data is sent to Google Analytics:</p>
+            <ul>
+                <li>Extension events such as installs, scans, and feature usage</li>
+                <li>Aggregate counts (e.g., number of books found, number of libraries scanned)</li>
+                <li>Error information to help diagnose and fix bugs</li>
+                <li>A randomly generated anonymous identifier to distinguish unique users</li>
+                <li>Your IP address, which Google uses for approximate geographic reporting (country/region level) but does not store</li>
+            </ul>
+            <p>No personally identifiable information (names, email addresses, Goodreads usernames, or book titles) is sent to Google Analytics.</p>
+
+            <h2>Third-Party Services</h2>
+            <p>Library Scan interacts with the following third-party services:</p>
+            <ul>
+                <li><strong>Goodreads</strong> (goodreads.com) — to fetch your book shelves via public RSS feeds</li>
+                <li><strong>OverDrive</strong> (overdrive.com) — to check book availability at your libraries</li>
+                <li><strong>Google Analytics</strong> (google-analytics.com) — to collect anonymous usage statistics</li>
+                <li><strong>ExtensionPay / Stripe</strong> (extensionpay.com) — to process Library Scan Pro purchases. Payment information is handled entirely by Stripe and is never accessible to Library Scan.</li>
+            </ul>
+
+            <h2>Data Sharing</h2>
+            <p>Library Scan does not sell, transfer, or share your data with third parties for purposes unrelated to the
+                extension's functionality. Anonymous usage data sent to Google Analytics is governed by
+                <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>.</p>
+
+            <h2>Data Storage and Security</h2>
+            <p>All personal data (Goodreads ID, library URLs, scan results) is stored locally on your device using
+                Chrome's storage API. No account or server-side storage is used. Uninstalling the extension removes all
+                locally stored data.</p>
+
+            <h2>Your Goodreads Profile</h2>
+            <p>Library Scan requires your Goodreads profile to be publicly viewable in order to access your book shelves
+                via RSS feeds. Library Scan does not log in to your Goodreads account or access any private data.</p>
+
+            <h2>Contact</h2>
+            <p>If you have questions about this privacy policy, please use the Contact button in the header above.</p>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <!-- Mailgo Email Linking -->
+    <script src="https://cdn.jsdelivr.net/npm/mailgo@0.9.7/dist/mailgo.min.js"></script>
+    <!-- JS -->
+    <script src="js/libraryScan.js"></script>
+</body>
+
+</html>
