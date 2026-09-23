@@ -1,29 +1,140 @@
-// Intro video functionality
+// Intro video + flip board orchestration
 document.addEventListener("DOMContentLoaded", function () {
-	const introVideo = document.getElementById("intro_video");
-	const mainContent = document.getElementById("main_content");
-
-	if (introVideo && mainContent) {
-		// Handle video end - scroll to main content
-		introVideo.addEventListener("ended", function () {
-			setTimeout(function () {
-				scrollIntoViewCustom(mainContent);
-			}, 400);
-		});
-	}
-
-	// Initialize flip board when DOM is loaded
+	setupIntro();
 	new FlipBoard();
 });
+
+function prefersReducedMotion() {
+	return (
+		window.matchMedia &&
+		window.matchMedia("(prefers-reduced-motion: reduce)").matches
+	);
+}
+
+function setupIntro() {
+	const introVideo = document.getElementById("intro_video");
+	const mainContent = document.getElementById("main_content");
+	if (!introVideo || !mainContent) return;
+
+	// Don't yank the page down if the visitor already scrolled on their own.
+	// The flag is sticky and threshold-based: mobile browsers pause an
+	// offscreen autoplay video and resume it when scrolled back into view, so
+	// 'ended' can fire long after the user has scrolled down and returned to
+	// the top — an instantaneous position check would wrongly re-scroll them.
+	// The >50px threshold also ignores iOS rubber-band overscroll jitter.
+	let userScrolledAway = false;
+	const onScroll = function () {
+		if (window.scrollY > 50) {
+			userScrolledAway = true;
+			window.removeEventListener("scroll", onScroll);
+		}
+	};
+	window.addEventListener("scroll", onScroll, { passive: true });
+
+	// If the intro can't load or autoplay is blocked (e.g. iOS Low Power Mode),
+	// skip straight to the main content instead of showing a frozen frame —
+	// unless the visitor is already past the intro
+	const skipIntro = function () {
+		if (window.scrollY > 50) return;
+		introVideo.style.display = "none";
+		window.scrollTo(0, 0);
+	};
+	introVideo.addEventListener("error", skipIntro);
+	const videoSource = introVideo.querySelector("source");
+	if (videoSource) videoSource.addEventListener("error", skipIntro);
+
+	// Flaky networks can stall the video without ever firing 'error': if it
+	// hasn't started playing after 8s while the page is visible, skip it
+	const loadWatchdog = setTimeout(function () {
+		if (!document.hidden && introVideo.paused) skipIntro();
+	}, 8000);
+	introVideo.addEventListener(
+		"playing",
+		function () {
+			clearTimeout(loadWatchdog);
+		},
+		{ once: true }
+	);
+
+	const autoScroll = function () {
+		if (userScrolledAway || window.scrollY > 50) return;
+		// Never scroll a hidden tab (the user would return to a page that
+		// silently jumped past the intro); wait until they come back instead
+		if (document.hidden) {
+			document.addEventListener("visibilitychange", function onVisible() {
+				if (document.hidden) return;
+				document.removeEventListener("visibilitychange", onVisible);
+				setTimeout(autoScroll, 400);
+			});
+			return;
+		}
+		scrollIntoViewCustom(mainContent);
+	};
+	introVideo.addEventListener("ended", function () {
+		setTimeout(autoScroll, 400);
+	});
+
+	// Autoplay can be rejected in background tabs (retry once the tab is
+	// visible) or blocked outright (e.g. iOS Low Power Mode — skip the intro)
+	const tryPlay = function () {
+		const playAttempt = introVideo.play();
+		if (!playAttempt || !playAttempt.catch) return;
+		playAttempt.catch(function () {
+			if (!introVideo.paused) return;
+			if (document.hidden) {
+				document.addEventListener("visibilitychange", function onVisible() {
+					if (document.hidden) return;
+					document.removeEventListener("visibilitychange", onVisible);
+					tryPlay();
+				});
+			} else {
+				skipIntro();
+			}
+		});
+	};
+	tryPlay();
+
+	// Browsers suspend media in hidden tabs, so switching apps or tabs during
+	// the intro can leave it frozen mid-play on return; resume it (tryPlay
+	// skips the intro if the browser refuses)
+	document.addEventListener("visibilitychange", function () {
+		if (document.hidden || !introVideo.paused || introVideo.ended) return;
+		if (userScrolledAway || introVideo.style.display === "none") return;
+		tryPlay();
+	});
+}
 
 // Smooth scroll functionality
 function scrollIntoViewCustom(element, duration = 1000) {
 	const targetPosition = element.offsetTop;
+
+	if (prefersReducedMotion()) {
+		window.scrollTo(0, targetPosition);
+		return;
+	}
+
+	// Prefer native smooth scrolling: it runs in the browser compositor and
+	// yields gracefully to user gestures, where a JS scroll loop fights the
+	// user's finger on touch devices
+	if ("scrollBehavior" in document.documentElement.style) {
+		window.scrollTo({ top: targetPosition, behavior: "smooth" });
+		return;
+	}
+
+	// Fallback easing loop for older browsers — cancelled by any user input
 	const startPosition = window.pageYOffset;
 	const distance = targetPosition - startPosition;
 	let startTime = null;
+	let cancelled = false;
+
+	const cancel = function () {
+		cancelled = true;
+	};
+	window.addEventListener("wheel", cancel, { passive: true, once: true });
+	window.addEventListener("touchstart", cancel, { passive: true, once: true });
 
 	function animation(currentTime) {
+		if (cancelled) return;
 		if (startTime === null) startTime = currentTime;
 		const timeElapsed = currentTime - startTime;
 		const run = ease(timeElapsed, startPosition, distance, duration);
@@ -42,12 +153,19 @@ function scrollIntoViewCustom(element, duration = 1000) {
 }
 
 // Flip Board Component
+//
+// The board renders once as an all-blank grid, then waits for BOTH the travel
+// data and the board scrolling into view before flipping every card to its
+// target. All flips are driven by a single requestAnimationFrame loop so the
+// page never runs hundreds of overlapping timers.
 class FlipBoard {
 	constructor() {
 		this.apiUrl =
 			"https://nomads.com/@isaacb.json?key=8971e0d4cc4a752af04587430a660fa9";
 		this.displayElement = document.getElementById("flipDisplay");
+		this.boardElement = document.getElementById("flipBoard");
 		this.characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		this.digits = "0123456789";
 		this.flags = [
 			"🇦🇩",
 			"🇦🇪",
@@ -321,39 +439,34 @@ class FlipBoard {
 			() => Math.random() - 0.5
 		);
 
-		// State management
-		this.dataReady = false;
-		this.travelData = null;
+		// Flip cadence/duration in ms. Durations must stay in sync with the
+		// animation rules in css/flipboard.css, and each cadence must exceed its
+		// duration so one flip fully finishes before the next starts.
+		this.standardFlip = { cadence: 200, duration: 180 };
+		this.wideFlip = { cadence: 800, duration: 600 };
 
-		this.init();
-	}
+		this.cards = [];
 
-	async init() {
-		// Always display the board immediately with empty states
-		this.displayFlipBoard(null);
+		// Render the all-blank board immediately so there is never a flash of
+		// final content, then animate once the data is ready AND the board is
+		// actually on screen (after the intro auto-scroll, or right away if the
+		// page loads already scrolled down).
+		this.renderBoard();
 
-		// Start wide card animations after 2.5 seconds
-		setTimeout(() => {
-			this.animateWideCards();
-		}, 2500);
-
-		// Fetch data in parallel
-		try {
-			const data = await this.fetchData();
-			this.travelData = data;
-			this.dataReady = true;
-
-			// Update the board with real data
-			this.displayFlipBoard(data);
-
-			// Start standard card animations at the same time as wide cards (2.5 seconds total)
-			setTimeout(() => {
-				this.animateStandardCards();
-			}, 2500);
-		} catch (error) {
+		// Race the fetch against a timeout so a hung request degrades to the
+		// blank-data board instead of leaving the page permanently blank
+		const dataPromise = Promise.race([
+			this.fetchData(),
+			new Promise((_, reject) =>
+				setTimeout(() => reject(new Error("Travel data request timed out")), 10000)
+			),
+		]).catch((error) => {
 			console.error("Error fetching data:", error);
-			// Keep the empty board displayed, no error state needed
-		}
+			return null;
+		});
+		Promise.all([dataPromise, this.whenBoardVisible()]).then(([data]) => {
+			this.start(data);
+		});
 	}
 
 	async fetchData() {
@@ -364,394 +477,329 @@ class FlipBoard {
 		return await response.json();
 	}
 
-	displayFlipBoard(data) {
-		// Use empty/default values when data is null or missing
-		const locations = data?.location || {};
-		const stats = data?.stats || {};
+	whenBoardVisible() {
+		return new Promise((resolve) => {
+			if (!("IntersectionObserver" in window)) {
+				resolve();
+				return;
+			}
+			const observer = new IntersectionObserver(
+				(entries) => {
+					if (entries.some((entry) => entry.isIntersecting)) {
+						observer.disconnect();
+						resolve();
+					}
+				},
+				{ threshold: 0.3 }
+			);
+			observer.observe(this.boardElement);
+		});
+	}
 
-		const totalCountries = stats?.countries || 0;
+	// Describes every card on the board (6 rows of 15 slots) for the given
+	// data. Row shapes are fixed, so the layout for null data and real data
+	// always line up card-for-card.
+	buildLayout(data) {
+		const locations = (data && data.location) || {};
+		const stats = (data && data.stats) || {};
+
+		const totalCountries = stats.countries || 0;
 		const current = locations.now || null;
 		const previous = locations.previous || null;
 		const next = locations.next || null;
 
-		// Store location data for section identification
-		this.currentLocationData = current;
-		this.previousLocationData = previous;
-		this.nextLocationData = next;
-
-		// Calculate actual days using live data
 		const today = new Date();
-		const previousDays = previous?.date_end
-			? this.calculateDaysFromDate(previous.date_end, today)
-			: 0;
-		const nextDays = next?.date_start
-			? this.calculateDaysFromDate(today, next.date_start)
-			: 0;
+		const previousDays =
+			previous && previous.date_end
+				? this.calculateDaysFromDate(previous.date_end, today)
+				: 0;
+		const nextDays =
+			next && next.date_start
+				? this.calculateDaysFromDate(today, next.date_start)
+				: 0;
 
-		let html = '<div class="space-y-4">';
-
-		// Always show all sections, even with empty data
-		html += this.createSection(
+		return [
 			[
-				// Row 1: Wide card + 4 blanks + 3 number cards + wide card = 15 cards total
-				this.createRow([
-					this.createCard("PREVIOUS:", "wide", false, "", "previous"),
-					...this.createBlankCards(4),
-					...this.createNumberCards(previousDays.toString()),
-					this.createCard("DAYS AGO", "wide", false, "", "daysAgo"),
-				]),
-				// Row 2: Exactly 15 standard cards for location
-				this.createRow(this.createLocationRow(previous, "previous")),
+				[
+					this.wideCell("PREVIOUS:"),
+					...this.blankCells(4),
+					...this.numberCells(previousDays),
+					this.wideCell("DAYS AGO"),
+				],
+				this.locationCells(previous, "previous"),
 			],
-			true
-		);
-
-		html += this.createSection([
-			// Row 3: Wide card + 4 blanks + 3 number cards + wide card = 15 cards total
-			this.createRow([
-				this.createCard("📍 NOW:", "wide", false, "", "now"),
-				...this.createBlankCards(4),
-				...this.createNumberCards(totalCountries.toString()),
-				this.createCard("COUNTRIES", "wide", false, "", "countries"),
-			]),
-			// Row 4: Exactly 15 standard cards for location
-			this.createRow(this.createLocationRow(current, "now")),
-		]);
-
-		html += this.createSection([
-			// Row 5: Wide card + 4 blanks + 3 number cards + wide card = 15 cards total
-			this.createRow([
-				this.createCard("NEXT:", "wide", false, "", "next"),
-				...this.createBlankCards(4),
-				...this.createNumberCards(nextDays.toString()),
-				this.createCard("DAYS AWAY", "wide", false, "", "daysAway"),
-			]),
-			// Row 6: Exactly 15 standard cards for location
-			this.createRow(this.createLocationRow(next, "next")),
-		]);
-
-		html += "</div>";
-		this.displayElement.innerHTML = html;
+			[
+				[
+					this.wideCell("📍 NOW:"),
+					...this.blankCells(4),
+					...this.numberCells(totalCountries),
+					this.wideCell("COUNTRIES"),
+				],
+				this.locationCells(current, "now"),
+			],
+			[
+				[
+					this.wideCell("NEXT:"),
+					...this.blankCells(4),
+					...this.numberCells(nextDays),
+					this.wideCell("DAYS AWAY"),
+				],
+				this.locationCells(next, "next"),
+			],
+		];
 	}
 
-	createSection(rows, isFirst = false) {
-		const divider = isFirst
-			? ""
-			: '<div class="h-px bg-white/30 my-4 md:my-3 sm:my-2 max-[430px]:my-1.5 max-[385px]:my-1"></div>';
-		return `${divider}<div class="flip-section">${rows.join("")}</div>`;
+	wideCell(content) {
+		return { type: "wide", content };
 	}
 
-	createRow(cards) {
-		return `<div class="flex items-center justify-center my-3 md:my-2 sm:my-1.5 max-[430px]:my-1 max-[385px]:my-0.5 flex-wrap gap-2 md:gap-1 sm:gap-0.5 max-[430px]:gap-0.5 max-[385px]:gap-px">${cards.join(
-			""
-		)}</div>`;
+	blankCells(count) {
+		return Array.from({ length: count }, () => ({
+			type: "letter",
+			content: "",
+		}));
 	}
 
-	createCard(
-		content,
-		className = "",
-		isFlag = false,
-		section = "",
-		cardType = ""
-	) {
-		const contentId = Math.random().toString(36).substr(2, 9);
-		return `
-			<div class="flip-card ${className}" data-target="${content}" data-id="${contentId}" ${
-			isFlag ? 'data-is-flag="true"' : ""
-		} ${section ? `data-section="${section}"` : ""} ${
-			cardType ? `data-card-type="${cardType}"` : ""
-		}>
-				<div class="flip-card-inner">
-					<!-- Static top half showing current content -->
-					<div class="flip-card-half flip-card-top">
-						<div class="flip-card-text top" id="top-${contentId}">${content}</div>
-					</div>
-					<!-- Static bottom half showing current content -->
-					<div class="flip-card-half flip-card-bottom">
-						<div class="flip-card-text bottom" id="bottom-${contentId}">${content}</div>
-					</div>
-					<!-- Animated top half that flips down -->
-					<div class="flip-card-top-flip">
-						<div class="flip-card-text top" id="top-flip-${contentId}">${content}</div>
-					</div>
-					<!-- Animated bottom half that flips up -->
-					<div class="flip-card-bottom-flip">
-						<div class="flip-card-text bottom" id="bottom-flip-${contentId}">${content}</div>
-					</div>
-				</div>
-			</div>
-		`;
-	}
-
-	createLetterCards(text) {
-		return text.split("").map((char) => {
-			if (char === " ") {
-				return this.createCard(" ", "standard");
-			}
-			return this.createCard(char, "standard");
-		});
-	}
-
-	createNumberCards(number) {
-		// Pad number to 3 digits for consistency
-		const paddedNumber = number.padStart(3, "0");
-		const digits = paddedNumber.split("");
-
-		// Find the first non-zero digit position
+	numberCells(number) {
+		// Clamp to 0-999: the board is a fixed 72-card grid paired to layout
+		// cells by index, so a 4th digit would shift every downstream card onto
+		// the wrong target. Pad to 3 digits, replacing leading zeros with blanks.
+		const clamped = Math.max(0, Math.min(999, Number(number) || 0));
+		const digits = clamped.toString().padStart(3, "0").split("");
 		let firstNonZeroIndex = digits.findIndex((digit) => digit !== "0");
-		if (firstNonZeroIndex === -1) {
-			// All zeros case - show last zero only
-			firstNonZeroIndex = digits.length - 1;
-		}
+		if (firstNonZeroIndex === -1) firstNonZeroIndex = digits.length - 1;
 
-		return digits.map((digit, index) => {
-			// Replace leading zeros with empty cards
-			if (digit === "0" && index < firstNonZeroIndex) {
-				return this.createCard(" ", "standard");
-			}
-			return this.createCard(digit, "standard");
+		return digits.map((digit, index) => ({
+			type: "digit",
+			content: index < firstNonZeroIndex ? "" : digit,
+		}));
+	}
+
+	locationCells(location, section) {
+		const cells = [];
+
+		cells.push({
+			type: "flag",
+			content: location ? this.getCountryFlag(location.country_code) : "🌍",
+			section,
 		});
-	}
 
-	createBlankCards(count) {
-		const cards = [];
-		for (let i = 0; i < count; i++) {
-			cards.push(this.createCard(" ", "standard"));
-		}
-		return cards;
-	}
-
-	createLocationRow(location, section) {
-		const cards = [];
-
-		// Add flag card (empty if no location)
-		const flagEmoji = location
-			? this.getCountryFlag(location.country_code)
-			: "🌍";
-		cards.push(
-			this.createCard(flagEmoji, "standard flag", !!location, section)
-		);
-
-		// Add city name cards (empty if no location)
-		const cityName = location
-			? (location.city || "").toUpperCase().replace(/\s+/g, "")
-			: "";
-		cards.push(...this.createLetterCards(cityName));
-
-		// Add comma (only if we have a country code)
-		cards.push(this.createCard(location?.country_code ? "," : "", "standard"));
-
-		// Add country code cards (empty if no location)
 		const countryCode = location
 			? (location.country_code || "").toUpperCase()
 			: "";
-		cards.push(...this.createLetterCards(countryCode));
+
+		// Drop parentheticals ("Haftkul (Seven Lakes)") and truncate long names
+		// so the ", CC" suffix always fits in the 15-card row
+		const maxCityLength = countryCode ? 14 - 1 - countryCode.length : 14;
+		const cityName = location
+			? Array.from(
+					(location.city || "")
+						.replace(/\s*\(.*?\)/g, "")
+						.toUpperCase()
+						.replace(/\s+/g, "")
+			  )
+					.slice(0, maxCityLength)
+					.join("")
+			: "";
+		for (const char of cityName) {
+			cells.push({ type: "letter", content: char });
+		}
+
+		cells.push({
+			type: "letter",
+			content: location && location.country_code ? "," : "",
+		});
+
+		for (const char of countryCode) {
+			cells.push({ type: "letter", content: char });
+		}
 
 		// Pad or truncate to exactly 15 cards
-		if (cards.length > 15) {
-			// Truncate if too long
-			return cards.slice(0, 15);
-		} else if (cards.length < 15) {
-			// Pad with blank cards if too short
-			const blanksNeeded = 15 - cards.length;
-			cards.push(...this.createBlankCards(blanksNeeded));
+		while (cells.length < 15) {
+			cells.push({ type: "letter", content: "" });
 		}
-
-		return cards;
+		return cells.slice(0, 15);
 	}
 
-	async animateAllCards() {
-		// This method is kept for compatibility but now split into wide and standard
-		// Wide cards are animated after 2.5 seconds, standard cards when data is ready
+	flattenLayout(sections) {
+		return sections.flat(2);
 	}
 
-	async animateCard(card) {
-		const target = card.dataset.target;
-		const isFlag = card.dataset.isFlag === "true";
-		const section = card.dataset.section;
-		const cardType = card.dataset.cardType;
-
-		// Always animate if card has a target, even if it's a space
-		if (target === undefined || target === null) return;
-
-		// For flag cards, cycle through flags with section-based timing
-		if (isFlag) {
-			await this.cycleToTargetFlag(card, target, section);
-		}
-		// For wide cards, cycle through their options
-		else if (card.classList.contains("wide") && cardType) {
-			await this.cycleWideCard(card, target, cardType);
-		}
-		// For standard letter/number cards, cycle through characters
-		else if (card.classList.contains("standard")) {
-			// Even spaces and punctuation should animate
-			if (target === " " || target === "," || target === "") {
-				// Just do a simple flip for spaces and punctuation
-				this.flipCard(card, target);
-			} else {
-				await this.cycleToTargetChar(card, target);
+	renderBoard() {
+		const sections = this.buildLayout(null);
+		let html = '<div class="flip-rows">';
+		sections.forEach((rows, index) => {
+			if (index > 0) html += '<div class="flip-divider"></div>';
+			html += '<div class="flip-section">';
+			for (const row of rows) {
+				html += '<div class="flip-row">';
+				for (const cell of row) {
+					const classes =
+						cell.type === "wide"
+							? "flip-card wide"
+							: cell.type === "flag"
+							? "flip-card standard flag"
+							: "flip-card standard";
+					html += `
+						<div class="${classes}">
+							<div class="flip-card-inner">
+								<div class="flip-card-half flip-card-top"><div class="flip-card-text top"></div></div>
+								<div class="flip-card-half flip-card-bottom"><div class="flip-card-text bottom"></div></div>
+								<div class="flip-card-top-flip"><div class="flip-card-text top"></div></div>
+								<div class="flip-card-bottom-flip"><div class="flip-card-text bottom"></div></div>
+							</div>
+						</div>`;
+				}
+				html += "</div>";
 			}
-		}
-		// For other cards, just do a simple flip
-		else {
-			this.flipCard(card, target);
-		}
+			html += "</div>";
+		});
+		html += "</div>";
+		this.displayElement.innerHTML = html;
+
+		this.cards = Array.from(
+			this.displayElement.querySelectorAll(".flip-card")
+		).map((el) => ({
+			el,
+			topText: el.querySelector(".flip-card-top .flip-card-text"),
+			bottomText: el.querySelector(".flip-card-bottom .flip-card-text"),
+			topFlipText: el.querySelector(".flip-card-top-flip .flip-card-text"),
+			bottomFlipText: el.querySelector(
+				".flip-card-bottom-flip .flip-card-text"
+			),
+			current: "",
+			sequence: [],
+			cadence: 0,
+			duration: 0,
+			nextFlipAt: 0,
+			finishAt: null,
+			flipVariant: false,
+		}));
 	}
 
-	flipCard(card, newContent) {
-		const contentId = card.dataset.id;
+	start(data) {
+		const cells = this.flattenLayout(this.buildLayout(data));
+		this.updateAriaLabel(data);
 
-		// Get all text elements
-		const topElement = document.getElementById(`top-${contentId}`);
-		const bottomElement = document.getElementById(`bottom-${contentId}`);
-		const topFlipElement = document.getElementById(`top-flip-${contentId}`);
-		const bottomFlipElement = document.getElementById(
-			`bottom-flip-${contentId}`
-		);
-
-		if (
-			!topElement ||
-			!bottomElement ||
-			!topFlipElement ||
-			!bottomFlipElement
-		) {
-			console.warn("Missing flip elements for card:", contentId);
+		if (prefersReducedMotion()) {
+			this.cards.forEach((card, index) => {
+				this.setCardInstantly(card, cells[index].content);
+			});
 			return;
 		}
 
-		// Set up the flip animation
-		topFlipElement.textContent = topElement.textContent; // Current content on top flip
-		bottomFlipElement.textContent = newContent; // New content on bottom flip
+		const startTime = performance.now();
+		let standardIndex = 0;
+		let wideIndex = 0;
+		this.cards.forEach((card, index) => {
+			const cell = cells[index];
+			card.sequence = this.buildSequence(cell);
+			const timing = cell.type === "wide" ? this.wideFlip : this.standardFlip;
+			card.cadence = timing.cadence;
+			card.duration = timing.duration;
+			// Stagger card starts so the board ripples in instead of every card
+			// flipping on the exact same frame
+			const offset =
+				cell.type === "wide" ? wideIndex++ * 25 : standardIndex++ * 15;
+			card.nextFlipAt = startTime + offset;
+		});
 
-		// Start the flip animation
-		card.classList.add("flipping");
-
-		// Universal animation duration based on card type
-		const isStandardCard = card.classList.contains("standard");
-		const animationDuration = isStandardCard ? 300 : 600;
-		const topUpdateDelay = isStandardCard ? 20 : 50;
-
-		// Update the static top half early so it's visible when the card flaps down
-		setTimeout(() => {
-			topElement.textContent = newContent;
-		}, topUpdateDelay);
-
-		// After animation completes, update remaining elements and reset
-		setTimeout(() => {
-			bottomElement.textContent = newContent;
-			topFlipElement.textContent = newContent;
-			bottomFlipElement.textContent = newContent;
-			card.classList.remove("flipping");
-		}, animationDuration);
+		requestAnimationFrame((now) => this.tick(now));
 	}
 
-	async cycleWideCard(card, target, cardType) {
-		// Use the shared randomized sequence for all wide cards
-		const shuffledTexts = [...this.shuffledWideCardTexts];
+	// The sequence of contents a card flips through, ending at its target
+	buildSequence(cell) {
+		const target = cell.content;
 
-		// If target not in shuffled list, add it at a random position
-		if (!shuffledTexts.includes(target)) {
-			const randomIndex = Math.floor(Math.random() * shuffledTexts.length);
-			shuffledTexts.splice(randomIndex, 0, target);
+		// Blank cards do a single empty flap for texture (indexOf("") would
+		// otherwise match position 0 of the alphabets below)
+		if (target === "" || target === " ") return [target];
+
+		if (cell.type === "wide") {
+			const index = this.shuffledWideCardTexts.indexOf(target);
+			if (index === -1) return [target];
+			return this.shuffledWideCardTexts.slice(0, index + 1);
 		}
 
-		const flipInterval = 800; // Slower for wide cards
-		let currentIndex = 0;
-
-		const flipTimer = setInterval(() => {
-			const text = shuffledTexts[currentIndex];
-
-			// Flip to the new text
-			this.flipCard(card, text);
-
-			// Stop when we reach the target
-			if (text === target) {
-				clearInterval(flipTimer);
-				return;
-			}
-
-			currentIndex = (currentIndex + 1) % shuffledTexts.length;
-		}, flipInterval);
-	}
-
-	async cycleToTargetChar(card, target) {
-		const targetIndex = this.characters.indexOf(target);
-		if (targetIndex === -1) return; // Target not found in characters
-
-		const flipInterval = 200; // Faster than animation duration (150ms)
-		let currentIndex = 0;
-
-		const flipTimer = setInterval(() => {
-			const char = this.characters[currentIndex];
-
-			// Flip to the new character
-			this.flipCard(card, char);
-
-			if (currentIndex === targetIndex) {
-				clearInterval(flipTimer);
-			}
-
-			currentIndex = (currentIndex + 1) % this.characters.length;
-
-			// If we've gone through all characters and haven't found target, stop
-			if (currentIndex === 0 && targetIndex === -1) {
-				clearInterval(flipTimer);
-			}
-		}, flipInterval);
-	}
-
-	async cycleToTargetFlag(card, target, section) {
-		const targetIndex = this.flags.indexOf(target);
-		if (targetIndex === -1) return; // Target not found in flags
-
-		// Set max flips based on section
-		let maxFlips;
-		switch (section) {
-			case "now":
-				maxFlips = 15;
-				break;
-			case "previous":
-				maxFlips = 20;
-				break;
-			case "next":
-				maxFlips = 25;
-				break;
-			default:
-				maxFlips = 15;
-				break;
+		if (cell.type === "flag") {
+			const index = this.flags.indexOf(target);
+			if (index === -1) return [target];
+			// Cap the number of flips per section, then jump to the target
+			const maxFlips =
+				{ now: 15, previous: 20, next: 25 }[cell.section] || 15;
+			if (index < maxFlips) return this.flags.slice(0, index + 1);
+			return [...this.flags.slice(0, maxFlips), target];
 		}
 
-		const flipInterval = 200; // Time between flips
-		let currentIndex = 0;
-		let flipCount = 0;
+		const alphabet = cell.type === "digit" ? this.digits : this.characters;
+		const index = alphabet.indexOf(target);
+		if (index === -1) return [target]; // blanks, punctuation, accented letters
+		return alphabet.slice(0, index + 1).split("");
+	}
 
-		const flipTimer = setInterval(() => {
-			const flag = this.flags[currentIndex];
-
-			// Flip to the new flag
-			this.flipCard(card, flag);
-
-			flipCount++;
-
-			// Stop if we've reached the target naturally
-			if (currentIndex === targetIndex) {
-				clearInterval(flipTimer);
-				return;
+	tick(now) {
+		let active = false;
+		for (const card of this.cards) {
+			if (card.finishAt !== null) {
+				if (now >= card.finishAt) {
+					// Sync all four layers: at rest the top-flip overlay covers the
+					// static top half, so it must show the settled content too
+					card.bottomText.textContent = card.current;
+					card.topFlipText.textContent = card.current;
+					card.bottomFlipText.textContent = card.current;
+					card.el.classList.remove("flip-a", "flip-b");
+					card.finishAt = null;
+				} else {
+					active = true;
+				}
 			}
-
-			// If we hit max flips, jump directly to target on next flip
-			if (flipCount >= maxFlips) {
-				clearInterval(flipTimer);
-
-				// Do one final flip to the correct target
-				setTimeout(() => {
-					this.flipCard(card, target);
-				}, flipInterval);
-				return;
+			if (card.sequence.length > 0) {
+				active = true;
+				if (card.finishAt === null && now >= card.nextFlipAt) {
+					this.startFlip(card, now);
+				}
 			}
+		}
+		if (active) requestAnimationFrame((time) => this.tick(time));
+	}
 
-			currentIndex = (currentIndex + 1) % this.flags.length;
-		}, flipInterval);
+	startFlip(card, now) {
+		const next = card.sequence.shift();
+		card.topFlipText.textContent = card.current; // outgoing content on the falling flap
+		card.bottomFlipText.textContent = next; // incoming content on the rising flap
+		card.topText.textContent = next; // static top, revealed as the flap falls
+		// Alternate between two identical animations so consecutive flips always
+		// restart cleanly, even when frames are dropped
+		card.flipVariant = !card.flipVariant;
+		card.el.classList.remove(card.flipVariant ? "flip-b" : "flip-a");
+		card.el.classList.add(card.flipVariant ? "flip-a" : "flip-b");
+		card.current = next;
+		card.finishAt = now + card.duration;
+		card.nextFlipAt = now + card.cadence;
+	}
+
+	setCardInstantly(card, content) {
+		card.topText.textContent = content;
+		card.bottomText.textContent = content;
+		card.topFlipText.textContent = content;
+		card.bottomFlipText.textContent = content;
+		card.current = content;
+	}
+
+	updateAriaLabel(data) {
+		const locations = (data && data.location) || {};
+		const describe = (location) =>
+			location && location.city
+				? `${location.city}, ${(location.country_code || "").toUpperCase()}`
+				: "unknown";
+		this.boardElement.setAttribute(
+			"aria-label",
+			`Split-flap travel board. Now: ${describe(
+				locations.now
+			)}. Previously: ${describe(locations.previous)}. Next: ${describe(
+				locations.next
+			)}.`
+		);
 	}
 
 	getCountryFlag(countryCode) {
@@ -778,30 +826,8 @@ class FlipBoard {
 		const from = normalize(fromDate);
 		const to = normalize(toDate);
 
-		const diffTime = Math.abs(to - from);
-		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-		return diffDays;
-	}
-
-	animateStandardCards() {
-		const standardCards = this.displayElement.querySelectorAll(
-			".flip-card.standard"
-		);
-		standardCards.forEach((card, index) => {
-			// Slight stagger: 15ms between cards for smoother performance
-			setTimeout(() => {
-				this.animateCard(card);
-			}, index * 15);
-		});
-	}
-
-	animateWideCards() {
-		const wideCards = this.displayElement.querySelectorAll(".flip-card.wide");
-		wideCards.forEach((card, index) => {
-			// Slight stagger: 25ms between wide cards
-			setTimeout(() => {
-				this.animateCard(card);
-			}, index * 25);
-		});
+		// Round, not floor: across a DST change local midnights are 23 or 25
+		// hours apart, which floor would count one day short
+		return Math.round(Math.abs(to - from) / (1000 * 60 * 60 * 24));
 	}
 }
