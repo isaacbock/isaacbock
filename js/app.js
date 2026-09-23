@@ -43,18 +43,49 @@ function setupIntro() {
 	const videoSource = introVideo.querySelector("source");
 	if (videoSource) videoSource.addEventListener("error", skipIntro);
 
-	// Flaky networks can stall the video without ever firing 'error': if it
-	// hasn't started playing after 8s while the page is visible, skip it
-	const loadWatchdog = setTimeout(function () {
-		if (!document.hidden && introVideo.paused) skipIntro();
-	}, 8000);
-	introVideo.addEventListener(
-		"playing",
-		function () {
-			clearTimeout(loadWatchdog);
-		},
-		{ once: true }
-	);
+	// Streaming stalls can freeze the intro before or mid-play without ever
+	// firing 'error' or 'ended'. If neither playback nor download makes any
+	// progress for 1.5s while the page is visible, nudge it once, then give up
+	// and move on to the board. Download progress counts, so a slow connection
+	// that is still buffering is left alone.
+	const bufferedEnd = function () {
+		const ranges = introVideo.buffered;
+		return ranges.length ? ranges.end(ranges.length - 1) : 0;
+	};
+	let lastProgress = "";
+	let stalledSince = null;
+	let nudged = false;
+	const progressWatchdog = setInterval(function () {
+		if (introVideo.ended || introVideo.style.display === "none") {
+			clearInterval(progressWatchdog);
+			return;
+		}
+		if (document.hidden || userScrolledAway) {
+			stalledSince = null;
+			return;
+		}
+		const now = Date.now();
+		const progress = introVideo.currentTime + ":" + bufferedEnd();
+		if (progress !== lastProgress) {
+			lastProgress = progress;
+			stalledSince = now;
+			return;
+		}
+		if (stalledSince === null) stalledSince = now;
+		if (now - stalledSince < 1500) return;
+		if (!nudged) {
+			nudged = true;
+			stalledSince = now;
+			const nudge = introVideo.play();
+			if (nudge && nudge.catch) nudge.catch(function () {});
+			return;
+		}
+		clearInterval(progressWatchdog);
+		// No frame ever shown: drop the blank intro. Frozen mid-play: keep the
+		// frame and glide down to the board as if it had ended.
+		if (introVideo.readyState < 2) skipIntro();
+		else autoScroll();
+	}, 500);
 
 	const autoScroll = function () {
 		if (userScrolledAway || window.scrollY > 50) return;
@@ -70,37 +101,26 @@ function setupIntro() {
 		}
 		scrollIntoViewCustom(mainContent);
 	};
+	// A cached video can finish before this script even runs
+	if (introVideo.ended) setTimeout(autoScroll, 400);
 	introVideo.addEventListener("ended", function () {
 		setTimeout(autoScroll, 400);
 	});
 
-	// Autoplay can be rejected in background tabs (retry once the tab is
-	// visible) or blocked outright (e.g. iOS Low Power Mode — skip the intro)
-	const tryPlay = function () {
-		const playAttempt = introVideo.play();
-		if (!playAttempt || !playAttempt.catch) return;
-		playAttempt.catch(function () {
-			if (!introVideo.paused) return;
-			if (document.hidden) {
-				document.addEventListener("visibilitychange", function onVisible() {
-					if (document.hidden) return;
-					document.removeEventListener("visibilitychange", onVisible);
-					tryPlay();
-				});
-			} else {
-				skipIntro();
-			}
-		});
-	};
-	tryPlay();
-
-	// Browsers suspend media in hidden tabs, so switching apps or tabs during
-	// the intro can leave it frozen mid-play on return; resume it (tryPlay
-	// skips the intro if the browser refuses)
+	// Starting playback is left entirely to the autoplay attribute: it waits
+	// until enough is buffered to play through, whereas an explicit play()
+	// starts on a sliver of data and stutters on slower connections. (If
+	// autoplay is blocked outright, e.g. iOS Low Power Mode, the watchdog
+	// above moves on to the board.)
+	//
+	// Browsers do suspend media in hidden tabs, though, so switching apps or
+	// tabs mid-intro can leave it frozen on return; resume it in that case.
 	document.addEventListener("visibilitychange", function () {
 		if (document.hidden || !introVideo.paused || introVideo.ended) return;
 		if (userScrolledAway || introVideo.style.display === "none") return;
-		tryPlay();
+		if (introVideo.currentTime === 0) return;
+		const resume = introVideo.play();
+		if (resume && resume.catch) resume.catch(function () {});
 	});
 }
 
@@ -113,33 +133,35 @@ function scrollIntoViewCustom(element, duration = 1000) {
 		return;
 	}
 
-	// Prefer native smooth scrolling: it runs in the browser compositor and
-	// yields gracefully to user gestures, where a JS scroll loop fights the
-	// user's finger on touch devices
-	if ("scrollBehavior" in document.documentElement.style) {
-		window.scrollTo({ top: targetPosition, behavior: "smooth" });
-		return;
-	}
-
-	// Fallback easing loop for older browsers — cancelled by any user input
+	// A gentle eased scroll (native smooth scrolling is too abrupt). Any user
+	// input cancels it immediately so it never fights the user's own scroll.
 	const startPosition = window.pageYOffset;
 	const distance = targetPosition - startPosition;
 	let startTime = null;
 	let cancelled = false;
 
+	const cancelEvents = ["wheel", "touchstart", "keydown", "mousedown"];
 	const cancel = function () {
 		cancelled = true;
+		cancelEvents.forEach(function (name) {
+			window.removeEventListener(name, cancel);
+		});
 	};
-	window.addEventListener("wheel", cancel, { passive: true, once: true });
-	window.addEventListener("touchstart", cancel, { passive: true, once: true });
+	cancelEvents.forEach(function (name) {
+		window.addEventListener(name, cancel, { passive: true });
+	});
 
 	function animation(currentTime) {
 		if (cancelled) return;
 		if (startTime === null) startTime = currentTime;
 		const timeElapsed = currentTime - startTime;
-		const run = ease(timeElapsed, startPosition, distance, duration);
-		window.scrollTo(0, run);
-		if (timeElapsed < duration) requestAnimationFrame(animation);
+		if (timeElapsed >= duration) {
+			window.scrollTo(0, targetPosition);
+			cancel();
+			return;
+		}
+		window.scrollTo(0, ease(timeElapsed, startPosition, distance, duration));
+		requestAnimationFrame(animation);
 	}
 
 	function ease(t, b, c, d) {
